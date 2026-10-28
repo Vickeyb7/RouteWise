@@ -1,0 +1,366 @@
+<!DOCTYPE html><html class="light" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><title>RouteWise</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline-variant": "#c4c5d8", "surface-bright": "#f8f9ff", "on-secondary-fixed-variant": "#38475f", "outline": "#747687", "primary-fixed": "#dde1ff", "on-error": "#ffffff", "surface-container-highest": "#d9e3f6", "on-primary-container": "#ecedff", "on-primary-fixed-variant": "#0036bc", "primary-fixed-dim": "#b8c4ff", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#00504b", "on-background": "#121c2a", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "inverse-surface": "#273140", "on-primary-fixed": "#001355", "secondary": "#505f78", "tertiary-fixed-dim": "#5dd9ce", "on-surface-variant": "#434655", "surface-variant": "#d9e3f6", "tertiary": "#005e58", "on-tertiary-container": "#9ffff5", "inverse-on-surface": "#ebf1ff", "secondary-container": "#d0e0fe", "surface-dim": "#d0daee", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#7cf6eb", "error": "#ba1a1a", "error-container": "#ffdad6", "on-secondary-container": "#54637c", "surface-container-high": "#dfe9fc", "primary": "#0040da", "on-error-container": "#93000a", "on-tertiary-fixed": "#00201d", "background": "#f8f9ff", "surface-container": "#e6eeff", "surface-container-low": "#eff3ff", "secondary-fixed": "#d4e3ff", "primary-container": "#315cf5", "on-secondary-fixed": "#0b1c32", "on-surface": "#121c2a", "surface": "#f8f9ff", "surface-tint": "#1b4de7", "inverse-primary": "#b8c4ff", "tertiary-container": "#007972", "secondary-fixed-dim": "#b7c7e4" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xl": "2.5rem", "space-md": "1rem", "gutter-mobile": "0.75rem", "margin": "2rem", "margin-mobile": "1rem", "gutter": "1.25rem", "margin-tablet": "1.5rem", "gutter-tablet": "1rem", "space-sm": "0.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem" }, "fontFamily": { "numeric-data-md": ["Inter"], "headline-lg-mobile": ["Inter"], "headline-lg": ["Inter"], "body-sm": ["Inter"], "display-lg-mobile": ["Inter"], "numeric-data-lg": ["Inter"], "title-sm": ["Inter"], "display-lg": ["Inter"], "title-md": ["Inter"], "body-md": ["Inter"], "label-md": ["Inter"], "headline-md": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "body-lg": ["Inter"] }, "fontSize": { "numeric-data-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }], "display-lg-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "numeric-data-lg": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" }] } } } };</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,36,58,0.04)] pt-safe"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-[0_2px_6px_rgba(49,92,245,0.25)]"><span class="material-symbols-outlined text-[20px]">alt_route</span></div><div class="flex flex-col"><span class="font-title-sm text-title-sm text-on-surface tracking-tight leading-none">RouteWise</span><span class="font-label-sm text-label-sm text-outline leading-tight">Cost Intelligence</span></div></div><div class="flex items-center gap-space-sm"><div class="h-8 px-2.5 rounded-full bg-surface-container flex items-center gap-1 text-on-surface-variant"><span class="font-label-sm text-label-sm font-semibold text-primary">₹</span><span class="font-label-sm text-label-sm font-semibold">INR</span></div><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface"><div class="flex flex-col w-full px-margin-mobile gap-space-md">
+<!-- Micro Intro / Context Banner -->
+<div class="relative w-full h-44 rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(20,36,58,0.08)] mb-1 group"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsd8hXA9wDsojHVkaVzpF05l-Ip0U-DHQZC7uO3uuZIYvNa49v9yv4nybutKu2Ix8hJifgn7tDENrt6p2MFO7pACH566x9aPpyAvFZj4AgxZFL_b1Yf_A0oAA72ETcNvP4RVZ8SFgPlN3soVs_RI88oixEhOpHaV8ueLXzmHjG3JBxt-bCcN9tjDprxt9Yhqrqv590zQRlOUuSz9r30Zkdb-UFbch9zqkAAwcU4gKv85r5WACUEhrRuw" alt="Scenic coastal highway leading to Goa" class="w-full h-full object-cover object-center"><div class="absolute inset-0 bg-gradient-to-t from-[#121c2a]/80 via-[#121c2a]/25 to-transparent flex flex-col justify-between p-3.5"><div class="flex items-center justify-between"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-sm text-label-sm shadow-[0_1px_3px_rgba(20,36,58,0.1)]"><span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">recommend</span>Featured Corridor</span><span class="px-2 py-0.5 rounded-full bg-primary/90 backdrop-blur-md text-on-primary font-label-sm text-label-sm font-semibold">NH48 • AH47</span></div><div class="flex flex-col"><div class="flex items-center gap-1.5 text-white font-title-sm text-title-sm font-semibold tracking-tight"><span class="material-symbols-outlined text-[16px] text-tertiary-fixed">navigation</span><span class="">Pune ➔ Goa Coastline</span></div><p class="font-label-sm text-label-sm text-slate-200">462.4 km • 4 Plazas • Scenic Ghats Route</p></div></div></div><div class="flex flex-col gap-1 pt-1">
+<div class="inline-flex items-center gap-1.5 self-start px-2.5 py-1 rounded-full bg-secondary-container/60 text-on-secondary-container">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">route</span>
+<span class="font-label-sm text-label-sm tracking-wide uppercase">Door-to-Door Multimodal Transit</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight mt-1">
+      Every route has a cost. <span class="text-primary">Find yours.</span>
+</h1>
+<p class="font-body-sm text-body-sm text-outline">
+      Calculate true driving expenses vs public transit including first/last-mile transfers.
+    </p>
+</div>
+<!-- Primary Trip Search Card (Elevation & Calculation Console) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-[0_4px_20px_rgba(20,36,58,0.06)] flex flex-col gap-space-md">
+<!-- Trip Mode Switcher -->
+<div class="flex p-1 bg-surface-container-low rounded-lg gap-1">
+<button class="flex-1 py-1.5 rounded text-center font-label-md text-label-md transition-all bg-surface-container-lowest text-primary shadow-[0_1px_3px_rgba(20,36,58,0.08)]" id="tab-oneway" type="button">
+        One-Way
+      </button>
+<button class="flex-1 py-1.5 rounded text-center font-label-md text-label-md text-secondary transition-all hover:text-on-surface" id="tab-round" type="button">
+        Round Trip
+      </button>
+</div>
+<!-- Origin & Destination Inputs with Swap Interlock -->
+<div class="relative flex flex-col gap-2">
+<!-- Origin Input -->
+<div class="flex items-center bg-surface-container-low rounded-lg px-3 py-2.5 focus-within:bg-surface-container-lowest focus-within:shadow-[0_0_0_2px_rgba(49,92,245,0.2)] transition-all">
+<span class="material-symbols-outlined text-[20px] text-primary mr-2.5">my_location</span>
+<div class="flex flex-col flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-outline leading-none mb-0.5">Origin</span>
+<input class="w-full bg-transparent font-title-sm text-title-sm text-on-surface outline-none p-0 tracking-tight" id="origin-input" placeholder="Enter starting point" type="text" value="Pune, Maharashtra">
+</div>
+<button aria-label="Use Current Location" class="w-7 h-7 rounded-full flex items-center justify-center text-outline hover:text-primary" type="button">
+<span class="material-symbols-outlined text-[18px]">near_me</span>
+</button>
+</div>
+<!-- Quick Swap Button (Center Float) -->
+<div class="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+<button aria-label="Swap Origin and Destination" class="w-9 h-9 rounded-full bg-surface-container-lowest shadow-[0_2px_8px_rgba(20,36,58,0.12)] flex items-center justify-center text-primary active:rotate-180 transition-transform duration-300" id="swap-routes" type="button">
+<span class="material-symbols-outlined text-[18px]">swap_vert</span>
+</button>
+</div>
+<!-- Destination Input -->
+<div class="flex items-center bg-surface-container-low rounded-lg px-3 py-2.5 focus-within:bg-surface-container-lowest focus-within:shadow-[0_0_0_2px_rgba(49,92,245,0.2)] transition-all">
+<span class="material-symbols-outlined text-[20px] text-tertiary mr-2.5" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="flex flex-col flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-outline leading-none mb-0.5">Destination</span>
+<input class="w-full bg-transparent font-title-sm text-title-sm text-on-surface outline-none p-0 tracking-tight" id="dest-input" placeholder="Enter destination" type="text" value="Goa, India">
+</div>
+</div>
+</div>
+<!-- Date & Passengers Configuration Grid -->
+<div class="grid grid-cols-2 gap-2">
+<!-- Date Field -->
+<div class="flex items-center bg-surface-container-low rounded-lg px-3 py-2">
+<span class="material-symbols-outlined text-[18px] text-outline mr-2">calendar_today</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-outline leading-tight">Travel Date</span>
+<span class="font-title-sm text-title-sm text-on-surface truncate">18 Oct 2025</span>
+</div>
+</div>
+<!-- Stepper / Passengers -->
+<div class="flex items-center justify-between bg-surface-container-low rounded-lg px-2.5 py-1.5">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline leading-none">Pax</span>
+<span class="font-title-sm text-title-sm text-on-surface" id="pax-count-display">2</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-7 h-7 rounded-md bg-surface-container-lowest text-on-surface font-title-sm text-title-sm flex items-center justify-center active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.05)]" id="btn-dec-pax" type="button">
+            -
+          </button>
+<button class="w-7 h-7 rounded-md bg-primary text-on-primary font-title-sm text-title-sm flex items-center justify-center active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.1)]" id="btn-inc-pax" type="button">
+            +
+          </button>
+</div>
+</div>
+</div>
+<!-- Vehicle Specification Pill Selector -->
+<div class="flex items-center justify-between bg-surface-container-low rounded-lg px-3 py-2.5">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[15px]">directions_car</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-outline">Vehicle Benchmark</span>
+<span class="font-title-sm text-title-sm text-on-surface truncate">Petrol Hatchback (15 km/L)</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[18px] text-outline shrink-0">expand_more</span>
+</div>
+<!-- Live Cost Formula Preview Footnote -->
+<div class="flex items-center gap-2 px-1 py-0.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary shrink-0">calculate</span>
+<span class="font-label-sm text-label-sm text-outline leading-tight">
+        Auto-split: <span class="text-on-surface font-semibold">50% per passenger</span> • 4 FASTag plazas mapped
+      </span>
+</div>
+<!-- Primary Action CTA -->
+<button class="w-full h-12 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-md text-title-md flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(0,64,218,0.35)] active:scale-[0.98] transition-all" id="cta-compare" type="button">
+<span class="">Compare My Trip</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Realtime Corridor Telemetry Grid -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Live Corridor Telemetry (NH48)</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Live
+      </span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- Fuel Rate -->
+<div class="bg-surface-container-lowest rounded-xl p-3 shadow-[0_1px_4px_rgba(20,36,58,0.03)] flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]">local_gas_station</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface leading-tight">₹104.21</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Petrol Rate / L</span>
+</div>
+</div>
+<!-- FASTag Toll -->
+<div class="bg-surface-container-lowest rounded-xl p-3 shadow-[0_1px_4px_rgba(20,36,58,0.03)] flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[20px]">toll</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface leading-tight">₹620</span>
+<span class="font-label-sm text-label-sm text-outline truncate">4 FASTag Plazas</span>
+</div>
+</div>
+<!-- Distance -->
+<div class="bg-surface-container-lowest rounded-xl p-3 shadow-[0_1px_4px_rgba(20,36,58,0.03)] flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]">straighten</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface leading-tight">462.4 km</span>
+<span class="font-label-sm text-label-sm text-outline truncate">via AH47 / NH48</span>
+</div>
+</div>
+<!-- Drive Duration -->
+<div class="bg-surface-container-lowest rounded-xl p-3 shadow-[0_1px_4px_rgba(20,36,58,0.03)] flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-secondary-container shrink-0">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface leading-tight">8h 45m</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Zero congestion</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Route Comparison Benchmark Stack -->
+<div class="flex flex-col gap-2 mt-1">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-title-md text-title-md text-on-surface">Modal Cost Spectrum</h2>
+<span class="font-label-sm text-label-sm text-primary font-semibold">2 Pax Total</span>
+</div>
+<!-- Mode Cards Stack -->
+<div class="flex flex-col gap-2">
+<!-- 1. Personal Car (Baseline Recommended) -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-[0_1px_6px_rgba(20,36,58,0.04)] flex flex-col gap-2 relative overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">directions_car</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Personal Car</span>
+<span class="font-body-sm text-body-sm text-outline">Door-to-door direct</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">₹4,230</span>
+<span class="font-label-sm text-label-sm text-tertiary">₹2,115 / pax</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 bg-surface-container-low/50 rounded-lg px-2.5 py-1.5">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-outline">speed</span>
+<span class="">8h 45m</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-semibold">
+            Optimal Flexibility
+          </span>
+</div>
+</div>
+<!-- 2. Intercity Bus (Value Pick) -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-[0_1px_6px_rgba(20,36,58,0.04)] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">directions_bus</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Intercity Sleeper Bus</span>
+<span class="font-body-sm text-body-sm text-outline">+ ₹350 auto-rickshaw drop</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">₹3,670</span>
+<span class="font-label-sm text-label-sm text-tertiary">₹1,835 / pax</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 bg-surface-container-low/50 rounded-lg px-2.5 py-1.5">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-outline">schedule</span>
+<span class="">11h 15m</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+            Lowest Total Cost
+          </span>
+</div>
+</div>
+<!-- 3. Train (Vande Bharat Express) -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-[0_1px_6px_rgba(20,36,58,0.04)] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">train</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Vande Bharat Express</span>
+<span class="font-body-sm text-body-sm text-outline">CC Class + Station transfers</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">₹3,950</span>
+<span class="font-label-sm text-label-sm text-tertiary">₹1,975 / pax</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 bg-surface-container-low/50 rounded-lg px-2.5 py-1.5">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-outline">schedule</span>
+<span class="">9h 20m</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+            Best Comfort
+          </span>
+</div>
+</div>
+<!-- 4. Commercial Flight (High hidden fee insight) -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-[0_1px_6px_rgba(20,36,58,0.04)] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">flight</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Flight (GOI / GOX)</span>
+<span class="font-body-sm text-body-sm text-error">Includes ₹2,630 airport cabs</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">₹10,030</span>
+<span class="font-label-sm text-label-sm text-outline">₹5,015 / pax</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 bg-surface-container-low/50 rounded-lg px-2.5 py-1.5">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-outline">timer</span>
+<span class="">5h 15m (Actual Door-to-Door)</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
+            +137% Cost Markup
+          </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Deep Dive Widget: Why Door-to-Door Matters -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface">The "Hidden Transfer" Trap</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+      A ₹3,700 airline ticket appears cheaper than driving, but Pune-Lohegaon pickup and Goa Dabolim arrival cabs add <span class="font-semibold text-on-surface">₹2,630</span> and <span class="font-semibold text-on-surface">3h 40m</span> of waiting time.
+    </p>
+<!-- Visual Multi-Modal Metric Bar -->
+<div class="flex flex-col gap-1.5 bg-surface-container-lowest p-3 rounded-lg">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-outline">Airfare: ₹7,400 (74%)</span>
+<span class="text-error font-semibold">Cabs: ₹2,630 (26%)</span>
+</div>
+<!-- Stacked Bar -->
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary" style="width: 74%;"></div>
+<div class="h-full bg-error" style="width: 26%;"></div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-outline pt-1">
+<span class="">Runway: 1h 15m</span>
+<span class="">Security, Gate &amp; Cabs: 4h 00m</span>
+</div>
+</div>
+</div>
+<!-- Realtime Verification & Compliance Footer -->
+<div class="flex items-center justify-center gap-2 py-2 text-outline">
+<span class="material-symbols-outlined text-[16px] text-tertiary">verified_user</span>
+<p class="font-label-sm text-label-sm text-center">
+      IOCL/BPCL real-time daily feed • NHAI FASTag database v4.2 verified today
+    </p>
+</div>
+</div>
+<!-- Client Micro-Interactions -->
+<script>
+  (function() {
+    // Passenger count state
+    let pax = 2;
+    const paxDisplay = document.getElementById('pax-count-display');
+    const btnInc = document.getElementById('btn-inc-pax');
+    const btnDec = document.getElementById('btn-dec-pax');
+
+    if (btnInc && btnDec && paxDisplay) {
+      btnInc.addEventListener('click', () => {
+        if (pax < 7) {
+          pax++;
+          paxDisplay.textContent = pax;
+        }
+      });
+      btnDec.addEventListener('click', () => {
+        if (pax > 1) {
+          pax--;
+          paxDisplay.textContent = pax;
+        }
+      });
+    }
+
+    // Origin/Destination Swap
+    const swapBtn = document.getElementById('swap-routes');
+    const originInp = document.getElementById('origin-input');
+    const destInp = document.getElementById('dest-input');
+
+    if (swapBtn && originInp && destInp) {
+      swapBtn.addEventListener('click', () => {
+        const temp = originInp.value;
+        originInp.value = destInp.value;
+        destInp.value = temp;
+      });
+    }
+
+    // Tabs toggle
+    const tabOneWay = document.getElementById('tab-oneway');
+    const tabRound = document.getElementById('tab-round');
+
+    if (tabOneWay && tabRound) {
+      tabOneWay.addEventListener('click', () => {
+        tabOneWay.className = "flex-1 py-1.5 rounded text-center font-label-md text-label-md transition-all bg-surface-container-lowest text-primary shadow-[0_1px_3px_rgba(20,36,58,0.08)]";
+        tabRound.className = "flex-1 py-1.5 rounded text-center font-label-md text-label-md text-secondary transition-all hover:text-on-surface";
+      });
+      tabRound.addEventListener('click', () => {
+        tabRound.className = "flex-1 py-1.5 rounded text-center font-label-md text-label-md transition-all bg-surface-container-lowest text-primary shadow-[0_1px_3px_rgba(20,36,58,0.08)]";
+        tabOneWay.className = "flex-1 py-1.5 rounded text-center font-label-md text-label-md text-secondary transition-all hover:text-on-surface";
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-1px_12px_rgba(20,36,58,0.05)]" data-active-classes="text-primary font-title-sm"><div class="flex items-center justify-around h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 transition-colors text-primary font-title-sm" data-path="plan" href="#"><span class="material-symbols-outlined text-[22px]">explore</span><span class="font-label-sm text-label-sm tracking-tight">Plan</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant transition-colors" data-path="compare" href="#"><span class="material-symbols-outlined text-[22px]">stacked_bar_chart</span><span class="font-label-sm text-label-sm tracking-tight">Compare</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant transition-colors" data-path="my-trips" href="#"><span class="material-symbols-outlined text-[22px]">commute</span><span class="font-label-sm text-label-sm tracking-tight">My Trips</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-0.5 text-on-surface-variant transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[22px]">account_circle</span><span class="font-label-sm text-label-sm tracking-tight">Profile</span></a></div></nav>
+
+</body></html>

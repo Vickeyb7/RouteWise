@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>RouteWise - Travel Cost Optimization &amp; Route Intelligence</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#747687","primary-fixed-dim":"#b8c4ff","on-secondary-fixed":"#0b1c32","secondary-fixed":"#d4e3ff","on-background":"#121c2a","background":"#f8f9ff","surface-variant":"#d9e3f6","tertiary-container":"#007972","on-error":"#ffffff","on-primary-fixed-variant":"#0036bc","surface-container":"#e6eeff","inverse-primary":"#b8c4ff","on-primary-fixed":"#001355","secondary":"#505f78","surface-dim":"#d0daee","error-container":"#ffdad6","on-error-container":"#93000a","secondary-fixed-dim":"#b7c7e4","primary-fixed":"#dde1ff","on-secondary":"#ffffff","on-surface":"#121c2a","surface-container-highest":"#d9e3f6","on-primary-container":"#ecedff","secondary-container":"#d0e0fe","surface-container-low":"#eff3ff","error":"#ba1a1a","tertiary-fixed-dim":"#5dd9ce","tertiary":"#005e58","on-secondary-fixed-variant":"#38475f","inverse-surface":"#273140","inverse-on-surface":"#ebf1ff","on-surface-variant":"#434655","primary":"#0040da","primary-container":"#315cf5","surface-tint":"#1b4de7","surface":"#f8f9ff","surface-bright":"#f8f9ff","tertiary-fixed":"#7cf6eb","outline-variant":"#c4c5d8","on-tertiary-fixed-variant":"#00504b","on-tertiary-container":"#9ffff5","on-tertiary-fixed":"#00201d","on-primary":"#ffffff","on-tertiary":"#ffffff","on-secondary-container":"#54637c","surface-container-lowest":"#ffffff","surface-container-high":"#dfe9fc"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin-tablet":"1.5rem","margin-mobile":"1rem","gutter-tablet":"1rem","space-xs":"0.25rem","gutter-mobile":"0.75rem","space-xl":"2.5rem","margin":"2rem","space-md":"1rem","gutter":"1.25rem","space-sm":"0.5rem","space-lg":"1.5rem"},fontFamily:{"label-md":["Inter"],"display-lg":["Inter"],"title-sm":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"numeric-data-md":["Inter"],"display-lg-mobile":["Inter"],"title-md":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"],"headline-lg-mobile":["Inter"],"label-sm":["Inter"],"body-lg":["Inter"],"numeric-data-lg":["Inter"],"headline-md":["Inter"]},fontSize:{"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"500"}],"display-lg":["40px",{"lineHeight":"48px","letterSpacing":"-0.03em","fontWeight":"700"}],"title-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"numeric-data-md":["18px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-lg-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"title-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.03em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"-0.005em","fontWeight":"400"}],"numeric-data-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,36,58,0.04)]"><div class="bg-surface-container-high py-1.5 px-margin-mobile md:px-margin-tablet lg:px-margin"><div class="max-w-[1440px] mx-auto flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><div class="flex items-center gap-space-xs"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>Demo Data Mode: Illustrative estimates for prototype evaluation</span></div><div class="hidden md:flex items-center gap-space-md"><span class="text-outline font-label-sm text-label-sm">Telemetry: Live</span><span class="text-outline font-label-sm text-label-sm">Latency: 18ms</span></div></div></div><div class="h-16 max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm" data-path="plan-a-trip" href="#"><img alt="RouteWise Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWBs30vS47DLKt01Zs-lf2WsNtAQesCcup-26i-M4U5OByxWEp0uISI2s7OcN_XJofcfkIpBi4ZqNGBQIIp0oMxB9MC68K1ZIDmgra1QwEg9bSfQPgReidsFqoXarhJbM7MWltK7JNIMMoKzvyVafWBHTqpXtbdUrow48VnNiD0UjUVaFYKK2-Q-Y6sLfQfZiSx-vd6-oKgQMN342vsdxaO0NKDbuetbgMKjCcW_EDqtYPeGfavLkCg"/><span class="font-title-md text-title-md text-on-surface tracking-tight">RouteWise</span></a><nav class="hidden lg:flex items-center gap-space-xs p-1 rounded-lg bg-surface-container-low" data-active-classes="bg-secondary-container text-on-secondary-fixed font-title-sm"><a class="px-space-md py-1.5 rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="plan-a-trip" href="#">Plan a Trip</a><a aria-current="page" class="px-space-md py-1.5 rounded-lg transition-colors bg-secondary-container text-on-secondary-fixed font-title-sm" data-path="compare-travel" href="#">Compare Travel</a><a class="px-space-md py-1.5 rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="my-trips" href="#">My Trips</a><a class="px-space-md py-1.5 rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="how-it-works" href="#">How It Works</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md"><span class="text-tertiary font-bold">₹</span><span>INR</span></div><a class="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm hover:bg-primary-container transition-all shadow-[0_1px_3px_rgba(20,36,58,0.04)]" data-path="plan-a-trip" href="#">Plan a Trip</a><button class="flex items-center justify-center focus:outline-none ring-2 ring-primary/20 rounded-full" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAemYO4IcT4WR5w-Bf5YN-aUvnYAw7bHqpmoib_WV9fErRofzNBdPDSqiBUKeqKI98vcA_6mzCLJejZKhlpRItjsB0y3lxvWUn5JVtNI6TqbLPqCLAtpJ_GPWbUuWCohhhg2u0uCugdmam0Jtdv-xh4pQh4JzCACNEVaqL5CtfhiqSdi0o7eLv5rl2jmSDEaOd-qKYRY6I3K_5yYqQRqTM_pEJjwf6HUmt7pkzEwR2ZV-ivy7vcNHApkA"/></button></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive State Engine Script & Styles -->
+<script>
+    window.routeState = {
+      travelers: 2,
+      isRoundTrip: false,
+      includeExtras: true,
+      viewPerPerson: false,
+      showBreakdownFormula: false,
+      baseCosts: {
+        car: { fuel: 3150, tolls: 600, misc: 700, hours: "9h 30m", inTransit: "9h 00m", transfer: "0m", wait: "30m stop" },
+        bus: { fareSingle: 900, transferFixed: 500, hours: "11h 00m", inTransit: "9h 30m", transfer: "1h 30m", wait: "20m" },
+        train: { fareSingle: 700, transferFixed: 400, hours: "11h 30m", inTransit: "9h 45m", transfer: "1h 45m", wait: "30m" },
+        flight: { airfareSingle: 3800, transferFixed: 2600, hours: "4h 30m", inTransit: "1h 15m", transfer: "1h 15m", wait: "2h 00m" }
+      }
+    };
+
+    function recalculate() {
+      const s = window.routeState;
+      const mult = s.isRoundTrip ? 2 : 1;
+      const p = s.travelers;
+      const extras = s.includeExtras ? 1 : 0.2;
+
+      // Car cost (independent of travelers count, but slight increment with luggage/pax)
+      const carTotal = Math.round((s.baseCosts.car.fuel + s.baseCosts.car.tolls + (s.baseCosts.car.misc * extras)) * mult);
+      // Bus
+      const busTotal = Math.round(((s.baseCosts.bus.fareSingle * p) + (s.baseCosts.bus.transferFixed * mult)) * (s.isRoundTrip ? 1.95 : 1));
+      // Train
+      const trainTotal = Math.round(((s.baseCosts.train.fareSingle * p) + (s.baseCosts.train.transferFixed * mult)) * (s.isRoundTrip ? 1.9 : 1));
+      // Flight
+      const flightTotal = Math.round(((s.baseCosts.flight.airfareSingle * p) + (s.baseCosts.flight.transferFixed * mult)) * (s.isRoundTrip ? 1.92 : 1));
+
+      // Display formatters
+      const fmt = (n) => '₹' + n.toLocaleString('en-IN');
+      const getVal = (tot) => s.viewPerPerson ? fmt(Math.round(tot / p)) : fmt(tot);
+      const getSub = (tot) => s.viewPerPerson ? `Total: ${fmt(tot)}` : `${fmt(Math.round(tot / p))}/person`;
+
+      // Update Top Metrics
+      const elTrainMetric = document.getElementById('metric-train-cost');
+      if (elTrainMetric) elTrainMetric.innerText = getVal(trainTotal);
+      const elCarMetric = document.getElementById('metric-car-cost');
+      if (elCarMetric) elCarMetric.innerText = getVal(carTotal);
+
+      // Dynamic Break-even card statement
+      const breakEvenText = document.getElementById('metric-breakeven-note');
+      if (breakEvenText) {
+        if (p >= 3) {
+          breakEvenText.innerText = `At ${p} passengers, driving is now ₹${Math.abs(carTotal - busTotal).toLocaleString('en-IN')} cheaper than group bus transit!`;
+        } else {
+          breakEvenText.innerText = `Driving breaks even with Intercity Bus at 3+ passengers (Current: ${p} pax)`;
+        }
+      }
+
+      // Update Card 1: Car
+      document.getElementById('card-car-price').innerText = getVal(carTotal);
+      document.getElementById('card-car-sub').innerText = getSub(carTotal);
+      document.getElementById('car-fuel-disp').innerText = fmt(Math.round(s.baseCosts.car.fuel * mult));
+      document.getElementById('car-toll-disp').innerText = fmt(Math.round(s.baseCosts.car.tolls * mult));
+      document.getElementById('car-misc-disp').innerText = fmt(Math.round(s.baseCosts.car.misc * extras * mult));
+
+      // Update Card 2: Bus
+      document.getElementById('card-bus-price').innerText = getVal(busTotal);
+      document.getElementById('card-bus-sub').innerText = getSub(busTotal);
+      document.getElementById('bus-ticket-disp').innerText = fmt(Math.round(s.baseCosts.bus.fareSingle * p * (s.isRoundTrip ? 1.95 : 1)));
+      document.getElementById('bus-transfer-disp').innerText = fmt(Math.round(s.baseCosts.bus.transferFixed * mult));
+
+      // Update Card 3: Train
+      document.getElementById('card-train-price').innerText = getVal(trainTotal);
+      document.getElementById('card-train-sub').innerText = getSub(trainTotal);
+      document.getElementById('train-ticket-disp').innerText = fmt(Math.round(s.baseCosts.train.fareSingle * p * (s.isRoundTrip ? 1.9 : 1)));
+      document.getElementById('train-transfer-disp').innerText = fmt(Math.round(s.baseCosts.train.transferFixed * mult));
+
+      // Update Card 4: Flight
+      document.getElementById('card-flight-price').innerText = getVal(flightTotal);
+      document.getElementById('card-flight-sub').innerText = getSub(flightTotal);
+      document.getElementById('flight-ticket-disp').innerText = fmt(Math.round(s.baseCosts.flight.airfareSingle * p * (s.isRoundTrip ? 1.92 : 1)));
+      document.getElementById('flight-transfer-disp').innerText = fmt(Math.round(s.baseCosts.flight.transferFixed * mult));
+
+      // Update Matrix Values
+      document.getElementById('tbl-car-tot').innerText = fmt(carTotal);
+      document.getElementById('tbl-bus-tot').innerText = fmt(busTotal);
+      document.getElementById('tbl-train-tot').innerText = fmt(trainTotal);
+      document.getElementById('tbl-flight-tot').innerText = fmt(flightTotal);
+
+      document.getElementById('tbl-car-per').innerText = fmt(Math.round(carTotal / p));
+      document.getElementById('tbl-bus-per').innerText = fmt(Math.round(busTotal / p));
+      document.getElementById('tbl-train-per').innerText = fmt(Math.round(trainTotal / p));
+      document.getElementById('tbl-flight-per').innerText = fmt(Math.round(flightTotal / p));
+
+      // Traveler Count Badge
+      document.getElementById('traveler-display').innerText = s.travelers;
+      document.getElementById('header-pax-count').innerText = `${s.travelers} traveller${s.travelers > 1 ? 's' : ''}`;
+      document.getElementById('header-trip-type').innerText = s.isRoundTrip ? 'Round-trip' : 'One-way';
+    }
+
+    function adjustTravelers(delta) {
+      window.routeState.travelers = Math.max(1, Math.min(8, window.routeState.travelers + delta));
+      recalculate();
+    }
+
+    function toggleViewMode(perPerson) {
+      window.routeState.viewPerPerson = perPerson;
+      const bTotal = document.getElementById('btn-view-total');
+      const bPer = document.getElementById('btn-view-perperson');
+      if (perPerson) {
+        bPer.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        bPer.classList.remove('text-secondary');
+        bTotal.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        bTotal.classList.add('text-secondary');
+      } else {
+        bTotal.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        bTotal.classList.remove('text-secondary');
+        bPer.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        bPer.classList.add('text-secondary');
+      }
+      recalculate();
+    }
+
+    function toggleRoundTrip() {
+      const cb = document.getElementById('cb-roundtrip');
+      window.routeState.isRoundTrip = cb.checked;
+      recalculate();
+    }
+
+    function toggleExtras() {
+      const cb = document.getElementById('cb-extras');
+      window.routeState.includeExtras = cb.checked;
+      recalculate();
+    }
+
+    function toggleFormulas() {
+      const pane = document.getElementById('formula-accordion');
+      const icon = document.getElementById('formula-chevron');
+      if (pane.classList.contains('hidden')) {
+        pane.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        pane.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+  </script>
+<!-- Ambient Visual Canvas Background Decorative Rings -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute -top-32 right-12 w-96 h-96 bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-80 -left-20 w-80 h-80 bg-tertiary-fixed/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin py-space-lg space-y-space-lg">
+<!-- ========================================== -->
+<!-- 1. HEADER ASSUMPTIONS BAR                  -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md">
+<div class="space-y-1">
+<div class="flex items-center flex-wrap gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">route</span>
+<span>Corridor NH48 / Anmod Ghat</span>
+</span>
+<!-- Demo Estimate Badge with Tooltip -->
+<div class="relative group cursor-pointer">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-tertiary">analytics</span>
+<span>Demo Estimate Mode</span>
+<span class="material-symbols-outlined text-[14px]">info</span>
+</span>
+<div class="absolute left-0 top-full mt-2 w-72 p-space-sm bg-inverse-surface text-inverse-on-surface text-body-sm font-body-sm rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+<p class="font-title-sm text-title-sm mb-1 text-tertiary-fixed">Illustrative Calibration</p>
+                Calculations synthesized from prevailing FASTag national toll plaza rates, daily state fuel indexes (₹105.8/L Petrol), and dynamic Indian Railways / DGCA seasonal fare bands.
+              </div>
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-space-sm tracking-tight">
+<span>Pune, MH</span>
+<span class="material-symbols-outlined text-primary text-[28px]">arrow_forward</span>
+<span>Goa (Panaji), GA</span>
+</h1>
+<p class="font-body-md text-body-md text-secondary flex items-center gap-space-xs flex-wrap">
+<span class="font-medium text-on-surface" id="header-trip-type">One-way</span>
+<span>•</span>
+<span class="font-medium text-on-surface" id="header-pax-count">2 travellers</span>
+<span>•</span>
+<span>450 km driving baseline</span>
+<span>•</span>
+<span>18 Oct 2025</span>
+</p>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-space-sm self-start lg:self-center">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors font-title-sm text-title-sm shadow-sm" onclick="alert('Assumption editor modal opened: update vehicle fuel efficiency (14.2 km/L), fuel grade (Petrol/EV), or start coordinates.');" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+<span>Edit trip assumptions</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-low text-secondary hover:text-on-surface hover:bg-surface-container transition-colors shadow-sm" onclick="window.print()" title="Export Route Summary" type="button">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 2. TOP 4 METRIC HIGHLIGHT TILES            -->
+<!-- ========================================== -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Metric 1: Lowest Group Cost -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Economy Benchmark</span>
+<p class="font-title-md text-title-md text-on-surface">Lowest Group Cost</p>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-tertiary-container/15 text-tertiary font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">train</span> Train
+            </span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-numeric-data-lg text-numeric-data-lg text-on-surface" id="metric-train-cost">₹1,800</span>
+<span class="font-body-sm text-body-sm text-secondary">total door-to-door</span>
+</div>
+<p class="font-label-sm text-label-sm text-tertiary font-medium mt-1">₹900 / person via 3-Tier AC Sleeper</p>
+</div>
+<div class="absolute -right-4 -bottom-4 w-16 h-16 bg-tertiary-fixed/20 rounded-full blur-xl pointer-events-none"></div>
+</div>
+<!-- Metric 2: Fastest Door-to-Door -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Transit Velocity</span>
+<p class="font-title-md text-title-md text-on-surface">Fastest Door-to-Door</p>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">flight</span> Flight
+            </span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-numeric-data-lg text-numeric-data-lg text-primary">4 h 30 min</span>
+<span class="font-body-sm text-body-sm text-secondary">total</span>
+</div>
+<p class="font-label-sm text-label-sm text-secondary font-normal mt-1">vs 1h 10m raw airtime (Airport ground tax: 3h 20m)</p>
+</div>
+<div class="absolute -right-4 -bottom-4 w-16 h-16 bg-primary-fixed/20 rounded-full blur-xl pointer-events-none"></div>
+</div>
+<!-- Metric 3: Estimated Road Trip Cost -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Highway Index</span>
+<p class="font-title-md text-title-md text-on-surface">Road Trip Model</p>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-fixed font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">directions_car</span> Car
+            </span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline gap-2">
+<span class="font-numeric-data-lg text-numeric-data-lg text-on-surface" id="metric-car-cost">₹4,450</span>
+<span class="font-body-sm text-body-sm text-secondary">total group</span>
+</div>
+<p class="font-label-sm text-label-sm text-secondary font-normal mt-1">30.4L fuel + 4 electronic FASTag toll plazas</p>
+</div>
+</div>
+<!-- Metric 4: Group Break-Even Point -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Tipping Point Matrix</span>
+<p class="font-title-md text-title-md text-on-surface">Break-Even Velocity</p>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">groups</span> Equilibrium
+            </span>
+</div>
+<div class="mt-space-md">
+<p class="font-body-md text-body-md text-on-surface font-medium leading-snug" id="metric-breakeven-note">
+              Driving breaks even with Intercity Bus at 3+ passengers (Current: 2 pax)
+            </p>
+<p class="font-label-sm text-label-sm text-secondary mt-1">Fixed car cost amortizes rapidly across multiple seats</p>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 3. INTERACTIVE DECISION CONTROLS           -->
+<!-- ========================================== -->
+<section class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+<!-- Traveler Stepper & Toggles -->
+<div class="flex flex-wrap items-center gap-space-md">
+<!-- Traveler Counter Stepper -->
+<div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">people</span>
+<span class="font-label-md text-label-md text-secondary">Travellers:</span>
+<div class="flex items-center gap-2 ml-1">
+<button class="w-7 h-7 flex items-center justify-center rounded bg-surface-container hover:bg-surface-variant text-on-surface font-bold text-title-sm transition-colors" onclick="adjustTravelers(-1)" title="Decrease passenger count" type="button">-</button>
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface w-4 text-center" id="traveler-display">2</span>
+<button class="w-7 h-7 flex items-center justify-center rounded bg-surface-container hover:bg-surface-variant text-on-surface font-bold text-title-sm transition-colors" onclick="adjustTravelers(1)" title="Increase passenger count" type="button">+</button>
+</div>
+</div>
+<!-- Total Group vs Per Person Pill Switch -->
+<div class="inline-flex p-1 rounded-lg bg-surface-container shadow-inner">
+<button class="px-3 py-1 rounded font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm font-semibold transition-all" id="btn-view-total" onclick="toggleViewMode(false)" type="button">
+              Total Group Cost
+            </button>
+<button class="px-3 py-1 rounded font-label-md text-label-md text-secondary hover:text-on-surface font-medium transition-all" id="btn-view-perperson" onclick="toggleViewMode(true)" type="button">
+              Cost Per Person
+            </button>
+</div>
+</div>
+<!-- Trip Multipliers (Round Trip, Extra parking) -->
+<div class="flex flex-wrap items-center gap-space-md">
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary cursor-pointer" id="cb-roundtrip" onchange="toggleRoundTrip()" type="checkbox"/>
+<span>Calculate Round-Trip (x2)</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer font-body-sm text-body-sm text-on-surface">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary cursor-pointer" id="cb-extras" onchange="toggleExtras()" type="checkbox"/>
+<span>Include parking &amp; transit meals</span>
+</label>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 4. MAIN COMPARISON: 4 DETAILED CARDS       -->
+<!-- ========================================== -->
+<section class="space-y-space-md">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Analytical Multi-Modal Synthesis</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Which way should you travel?</h2>
+</div>
+<span class="font-body-sm text-body-sm text-secondary">All options normalized for <strong>door-to-door</strong> timeline &amp; expenditure</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- CARD 1: CAR / PERSONAL VEHICLE -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between p-space-md relative overflow-hidden group">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">directions_car</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Car / EV Road Trip</h3>
+<p class="font-label-sm text-label-sm text-secondary">Private Vehicle (Sedan / SUV)</p>
+</div>
+</div>
+</div>
+<!-- Cost & Time Header -->
+<div class="p-space-sm rounded-lg bg-surface-container-low space-y-1">
+<div class="flex items-baseline justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Door-to-door:</span>
+<span class="font-numeric-data-lg text-numeric-data-lg text-on-surface" id="card-car-price">₹4,450</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-secondary">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> 9 h 30 min</span>
+<span class="font-medium text-primary" id="card-car-sub">₹2,225/person</span>
+</div>
+</div>
+<!-- Breakdown Distribution Micro-bar -->
+<div class="space-y-1.5">
+<div class="flex justify-between font-label-sm text-label-sm text-outline">
+<span>Expense Composition</span>
+<span>71% Fuel • 13% Tolls</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container flex overflow-hidden">
+<div class="bg-primary h-full" style="width: 71%;" title="Fuel"></div>
+<div class="bg-tertiary-container h-full" style="width: 14%;" title="Tolls"></div>
+<div class="bg-surface-variant h-full" style="width: 15%;" title="Misc/Parking"></div>
+</div>
+</div>
+<!-- Itemized Elements -->
+<div class="space-y-2 text-body-sm font-body-sm">
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">local_gas_station</span> Fuel (30L @ ₹105/L)
+                  </span>
+<span class="font-medium text-on-surface" id="car-fuel-disp">₹3,150</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-tertiary">toll</span> Tolls (FASTag 4 gates)
+                  </span>
+<span class="font-medium text-on-surface" id="car-toll-disp">₹600</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">local_parking</span> Parking &amp; Waypoint Tea
+                  </span>
+<span class="font-medium text-on-surface" id="car-misc-disp">₹700</span>
+</div>
+</div>
+<!-- Operational Details -->
+<div class="space-y-1.5 font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">check_circle</span>
+<p class="text-on-surface-variant"><strong class="text-on-surface">Trade-off:</strong> Ultimate schedule autonomy &amp; massive luggage flexibility.</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">warning</span>
+<p class="text-secondary">Ghat curves (Chorla/Anmod) require attentive driving.</p>
+</div>
+</div>
+</div>
+<!-- Card Action -->
+<div class="mt-space-md pt-space-sm">
+<button class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-surface-variant text-primary font-title-sm text-title-sm flex items-center justify-center gap-2 transition-colors" onclick="alert('Viewing comprehensive fuel station corridor &amp; FASTag toll breakdown.')" type="button">
+<span class="material-symbols-outlined text-[18px]">map</span>
+<span>Inspect Road-Trip Breakdown</span>
+</button>
+</div>
+</div>
+<!-- CARD 2: INTERCITY BUS (AC SLEEPER) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between p-space-md relative overflow-hidden group">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">directions_bus</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Intercity Sleeper Bus</h3>
+<p class="font-label-sm text-label-sm text-secondary">Multi-Axle AC Sleeper</p>
+</div>
+</div>
+</div>
+<!-- Cost & Time Header -->
+<div class="p-space-sm rounded-lg bg-surface-container-low space-y-1">
+<div class="flex items-baseline justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Door-to-door:</span>
+<span class="font-numeric-data-lg text-numeric-data-lg text-on-surface" id="card-bus-price">₹2,300</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-secondary">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> 11 h 00 min</span>
+<span class="font-medium text-on-surface" id="card-bus-sub">₹1,150/person</span>
+</div>
+</div>
+<!-- Breakdown Distribution Micro-bar -->
+<div class="space-y-1.5">
+<div class="flex justify-between font-label-sm text-label-sm text-outline">
+<span>Expense Composition</span>
+<span>78% Tickets • 22% Autos</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container flex overflow-hidden">
+<div class="bg-primary-container h-full" style="width: 78%;" title="Bus Ticket"></div>
+<div class="bg-secondary h-full" style="width: 22%;" title="Local Auto/Cab"></div>
+</div>
+</div>
+<!-- Itemized Elements -->
+<div class="space-y-2 text-body-sm font-body-sm">
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">confirmation_number</span> Bus Tickets (2 berths)
+                  </span>
+<span class="font-medium text-on-surface" id="bus-ticket-disp">₹1,800</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">local_taxi</span> Swargate &amp; Panaji Transfers
+                  </span>
+<span class="font-medium text-on-surface" id="bus-transfer-disp">₹500</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-tertiary">bedtime</span> Hotel night saved
+                  </span>
+<span class="font-medium text-tertiary">-₹1,200 net</span>
+</div>
+</div>
+<!-- Operational Details -->
+<div class="space-y-1.5 font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">check_circle</span>
+<p class="text-on-surface-variant"><strong class="text-on-surface">Trade-off:</strong> Overnight sleep conserves day hours; board at convenient points.</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">timer</span>
+<p class="text-secondary">Fixed halts and highway traffic variability.</p>
+</div>
+</div>
+</div>
+<!-- Card Action -->
+<div class="mt-space-md pt-space-sm">
+<button class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-sm text-title-sm flex items-center justify-center gap-2 transition-colors" onclick="alert('Redirecting to partner bus booking aggregator (RedBus / IntrCity).')" type="button">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+<span>Find Bus Tickets</span>
+</button>
+</div>
+</div>
+<!-- CARD 3: TRAIN (EXPRESS / VANDE BHARAT) - BEST VALUE -->
+<div class="bg-surface-container-lowest rounded-xl shadow-md flex flex-col justify-between p-space-md relative overflow-hidden group">
+<div class="absolute top-0 right-0 left-0 h-1 bg-tertiary"></div>
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-tertiary-container/15 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[22px]">train</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Express / Vande Bharat</h3>
+<p class="font-label-sm text-label-sm text-secondary">IRCTC Konkan Route</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary font-label-sm text-label-sm font-bold uppercase tracking-wider">
+                  Lowest Cost
+                </span>
+</div>
+<!-- Cost & Time Header -->
+<div class="p-space-sm rounded-lg bg-surface-container-low space-y-1">
+<div class="flex items-baseline justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Door-to-door:</span>
+<span class="font-numeric-data-lg text-numeric-data-lg text-tertiary" id="card-train-price">₹1,800</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-secondary">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> 11 h 30 min</span>
+<span class="font-medium text-tertiary" id="card-train-sub">₹900/person</span>
+</div>
+</div>
+<!-- Breakdown Distribution Micro-bar -->
+<div class="space-y-1.5">
+<div class="flex justify-between font-label-sm text-label-sm text-outline">
+<span>Expense Composition</span>
+<span>77% Rail Fare • 23% Station Cabs</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container flex overflow-hidden">
+<div class="bg-tertiary h-full" style="width: 77%;" title="Train Fare"></div>
+<div class="bg-secondary h-full" style="width: 23%;" title="Station Transfer"></div>
+</div>
+</div>
+<!-- Itemized Elements -->
+<div class="space-y-2 text-body-sm font-body-sm">
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-tertiary">confirmation_number</span> 3AC / Chair Car Tickets
+                  </span>
+<span class="font-medium text-on-surface" id="train-ticket-disp">₹1,400</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">local_taxi</span> Pune / Madgaon Station Cabs
+                  </span>
+<span class="font-medium text-on-surface" id="train-transfer-disp">₹400</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">landscape</span> Scenic Dudhsagar Pass
+                  </span>
+<span class="font-medium text-tertiary">Included</span>
+</div>
+</div>
+<!-- Operational Details -->
+<div class="space-y-1.5 font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">check_circle</span>
+<p class="text-on-surface-variant"><strong class="text-on-surface">Trade-off:</strong> Supreme balance of cost and comfort across Western Ghats.</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">calendar_clock</span>
+<p class="text-secondary">IRCTC seats sell out 3-4 weeks in advance.</p>
+</div>
+</div>
+</div>
+<!-- Card Action -->
+<div class="mt-space-md pt-space-sm">
+<button class="w-full py-2.5 px-3 rounded-lg bg-tertiary text-on-tertiary hover:bg-tertiary/90 font-title-sm text-title-sm flex items-center justify-center gap-2 transition-colors shadow-sm" onclick="alert('Checking live seat availability on IRCTC Konkan route.')" type="button">
+<span class="material-symbols-outlined text-[18px]">airplane_ticket</span>
+<span>Check Train Availability</span>
+</button>
+</div>
+</div>
+<!-- CARD 4: FLIGHT (DIRECT / 1-STOP) - FASTEST -->
+<div class="bg-surface-container-lowest rounded-xl shadow-md flex flex-col justify-between p-space-md relative overflow-hidden group">
+<div class="absolute top-0 right-0 left-0 h-1 bg-primary"></div>
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">flight_takeoff</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface">Flight (PNQ → GOI/GOX)</h3>
+<p class="font-label-sm text-label-sm text-secondary">Economy Class Jet</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider">
+                  Fastest
+                </span>
+</div>
+<!-- Cost & Time Header -->
+<div class="p-space-sm rounded-lg bg-surface-container-low space-y-1">
+<div class="flex items-baseline justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Door-to-door:</span>
+<span class="font-numeric-data-lg text-numeric-data-lg text-primary" id="card-flight-price">₹10,200</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-secondary">
+<span class="flex items-center gap-1 font-semibold text-primary"><span class="material-symbols-outlined text-[14px]">bolt</span> 4 h 30 min</span>
+<span class="font-medium text-secondary" id="card-flight-sub">₹5,100/person</span>
+</div>
+</div>
+<!-- Breakdown Distribution Micro-bar -->
+<div class="space-y-1.5">
+<div class="flex justify-between font-label-sm text-label-sm text-outline">
+<span>Expense Composition</span>
+<span>74% Airfare • 26% Airport Cabs</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container flex overflow-hidden">
+<div class="bg-primary h-full" style="width: 74%;" title="Airfare"></div>
+<div class="bg-error-container h-full" style="width: 26%;" title="Airport Cabs"></div>
+</div>
+</div>
+<!-- Itemized Elements -->
+<div class="space-y-2 text-body-sm font-body-sm">
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">flight</span> Base Airfare (2 pax)
+                  </span>
+<span class="font-medium text-on-surface" id="flight-ticket-disp">₹7,600</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-error">local_taxi</span> Airport Cabs (PNQ ₹600 + GOX ₹2,000)
+                  </span>
+<span class="font-medium text-error font-semibold" id="flight-transfer-disp">₹2,600</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low/50 px-2 rounded">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">hourglass_empty</span> Check-in &amp; Security wait
+                  </span>
+<span class="font-medium text-on-surface">2 h 00 min</span>
+</div>
+</div>
+<!-- Operational Details -->
+<div class="space-y-1.5 font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">check_circle</span>
+<p class="text-on-surface-variant"><strong class="text-on-surface">Trade-off:</strong> Arrive in half the time; frees an entire working day.</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-error mt-0.5">payments</span>
+<p class="text-on-surface-variant">Ground airport transfers add <strong class="text-error">34%</strong> on top of flight tickets.</p>
+</div>
+</div>
+</div>
+<!-- Card Action -->
+<div class="mt-space-md pt-space-sm">
+<button class="w-full py-2.5 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-title-sm text-title-sm flex items-center justify-center gap-2 transition-colors shadow-sm" onclick="alert('Opening live flight price index across Skyscanner/MakeMyTrip.')" type="button">
+<span class="material-symbols-outlined text-[18px]">search</span>
+<span>Search Flights</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 5. DETAILED COMPARISON MATRIX              -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-space-md bg-surface-container-low flex items-center justify-between flex-wrap gap-2">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Comparative Feature Matrix</h3>
+<p class="font-body-sm text-body-sm text-secondary">Rigorous side-by-side breakdown across core logistical vectors.</p>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">
+            Dataset updated 2 hours ago
+          </span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-body-sm font-body-sm">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-title-sm text-title-sm">
+<th class="p-4 w-1/4">Evaluation Attribute</th>
+<th class="p-4 w-[18.75%] text-on-surface">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary">directions_car</span>
+<span>Car (Personal)</span>
+</div>
+</th>
+<th class="p-4 w-[18.75%] text-on-surface">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary">directions_bus</span>
+<span>Intercity Bus</span>
+</div>
+</th>
+<th class="p-4 w-[18.75%] text-on-surface">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-tertiary">train</span>
+<span>Train (Express)</span>
+</div>
+</th>
+<th class="p-4 w-[18.75%] text-on-surface">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary">flight</span>
+<span>Flight (Economy)</span>
+</div>
+</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high/40">
+<!-- Row: Total Group Cost -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-title-sm text-title-sm text-on-surface">Total Group Cost</td>
+<td class="p-4 font-numeric-data-md text-numeric-data-md text-on-surface" id="tbl-car-tot">₹4,450</td>
+<td class="p-4 font-numeric-data-md text-numeric-data-md text-on-surface" id="tbl-bus-tot">₹2,300</td>
+<td class="p-4 font-numeric-data-md text-numeric-data-md text-tertiary font-bold" id="tbl-train-tot">₹1,800</td>
+<td class="p-4 font-numeric-data-md text-numeric-data-md text-on-surface" id="tbl-flight-tot">₹10,200</td>
+</tr>
+<!-- Row: Cost per Person -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-medium text-secondary">Cost per Person</td>
+<td class="p-4 text-on-surface" id="tbl-car-per">₹2,225</td>
+<td class="p-4 text-on-surface" id="tbl-bus-per">₹1,150</td>
+<td class="p-4 text-tertiary font-semibold" id="tbl-train-per">₹900</td>
+<td class="p-4 text-on-surface" id="tbl-flight-per">₹5,100</td>
+</tr>
+<!-- Row: Door-to-Door Time -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 font-title-sm text-title-sm text-on-surface">Door-to-Door Duration</td>
+<td class="p-4 text-on-surface">9 h 30 min</td>
+<td class="p-4 text-on-surface">11 h 00 min</td>
+<td class="p-4 text-on-surface">11 h 30 min</td>
+<td class="p-4 text-primary font-bold">4 h 30 min</td>
+</tr>
+<!-- Row: In-Transit Time -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-secondary">Active In-Transit Time</td>
+<td class="p-4 text-on-surface">9 h 00 min (Driving)</td>
+<td class="p-4 text-on-surface">9 h 30 min (Expressway)</td>
+<td class="p-4 text-on-surface">9 h 45 min (Rail line)</td>
+<td class="p-4 text-on-surface font-medium">1 h 15 min (Airborne)</td>
+</tr>
+<!-- Row: Terminal Access & Transfers -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-secondary">Terminal Access &amp; Transfers</td>
+<td class="p-4 text-on-surface">0 min (Door-to-door)</td>
+<td class="p-4 text-on-surface">1 h 30 min (Local Autos)</td>
+<td class="p-4 text-on-surface">1 h 45 min (Station Cabs)</td>
+<td class="p-4 text-error font-medium">1 h 15 min (Far Hub Airport)</td>
+</tr>
+<!-- Row: Waiting / Check-in Time -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-secondary">Waiting / Security Buffers</td>
+<td class="p-4 text-on-surface">30 min (Voluntary breaks)</td>
+<td class="p-4 text-on-surface">20 min (Boarding point)</td>
+<td class="p-4 text-on-surface">30 min (Platform buffer)</td>
+<td class="p-4 text-error font-medium">2 h 00 min (Check-in/TSA)</td>
+</tr>
+<!-- Row: Luggage Allowance -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-secondary">Luggage Capability</td>
+<td class="p-4 text-tertiary font-semibold">Unlimited (Trunk capacity)</td>
+<td class="p-4 text-on-surface">2 x 20kg Bags</td>
+<td class="p-4 text-on-surface">High (Up to 40kg/pax)</td>
+<td class="p-4 text-secondary">Strict (15kg check + 7kg cabin)</td>
+</tr>
+<!-- Row: Flexibility Score -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-secondary">Flexibility &amp; Stops</td>
+<td class="p-4 text-tertiary font-semibold">High (Stop anywhere)</td>
+<td class="p-4 text-secondary">Low (Preset rest-stops)</td>
+<td class="p-4 text-secondary">Moderate (Fixed schedule)</td>
+<td class="p-4 text-secondary">Very Low (Inflexible flights)</td>
+</tr>
+<!-- Row: Data Confidence -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/30">
+<td class="p-4 text-secondary">Data Confidence Index</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 text-tertiary font-medium">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> 98% (Live Fuel API)
+                  </span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 text-tertiary font-medium">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> 94% (Partner Feeds)
+                  </span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 text-tertiary font-medium">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> 99% (Static IRCTC)
+                  </span>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1 text-primary font-medium">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 91% (Dynamic Fare API)
+                  </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 6. TRANSPARENT CALCULATION BREAKDOWN       -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<button class="w-full p-space-md flex items-center justify-between hover:bg-surface-container-low transition-colors text-left" onclick="toggleFormulas()" type="button">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">function</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">How RouteWise calculated these estimates</h4>
+<p class="font-body-sm text-body-sm text-secondary">Mathematical transparent models, zero black-box assumptions.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary transition-transform duration-200" id="formula-chevron">expand_more</span>
+</button>
+<div class="hidden p-space-md bg-surface-container-low space-y-space-md" id="formula-accordion">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="bg-surface-container-lowest p-space-md rounded-lg space-y-2">
+<h5 class="font-title-sm text-title-sm text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">local_gas_station</span>
+                Vehicle Fuel &amp; Toll Equation
+              </h5>
+<div class="font-label-md text-label-md bg-surface-container p-2.5 rounded font-mono text-on-surface">
+                Total_Car = (Distance / Efficiency × FuelPrice) + Sum(FASTagTolls) + Parking
+              </div>
+<p class="font-body-sm text-body-sm text-secondary">
+                Calculated as (450 km ÷ 14.5 km/L × ₹105.80/L = ₹3,283) + Khed-Shivapur (₹120) + Anewadi (₹90) + Taswade (₹105) + Kini (₹100) + Goa Green Cess (₹185) = ₹4,450.
+              </p>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-lg space-y-2">
+<h5 class="font-title-sm text-title-sm text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">flight</span>
+                Aviation Ground Tax Reality Factor
+              </h5>
+<div class="font-label-md text-label-md bg-surface-container p-2.5 rounded font-mono text-on-surface">
+                Total_Flight = (BaseFare × N) + Cab(Origin → PNQ) + Cab(Mopa/Dabolim → Panaji)
+              </div>
+<p class="font-body-sm text-body-sm text-secondary">
+                Flight time alone (1h 15m) neglects the mandatory 120-minute reporting buffer plus the 35km transit from Mopa International Airport to Central North Goa (typically ₹2,000 via prepaid GoaMiles).
+              </p>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-high/60 flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Want to run custom EV battery degradation and charging curve scenarios?</span>
+<a class="text-primary font-title-sm text-title-sm hover:underline flex items-center gap-1" href="#">
+<span>Access Advanced EV Simulator</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 7. RECENT TRIPS & CORRIDOR INTELLIGENCE    -->
+<!-- ========================================== -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-center">
+<!-- Route Map & Elevation Card -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm p-space-md space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="space-y-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Geospatial Telemetry</span>
+<h3 class="font-title-md text-title-md text-on-surface">Pune-Goa Corridor Profile &amp; Ghats</h3>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-full text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>NH48 via Nipani-Amboli Pass</span>
+</div>
+</div>
+<!-- Static Location Pipeline Div -->
+<div class="w-full h-56 rounded-lg bg-surface-container relative overflow-hidden bg-cover bg-center shadow-inner" data-location="Pune to Goa Highway India" style="">
+<!-- Simulated Route Overlay HUD -->
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex flex-col justify-end p-space-md text-inverse-on-surface">
+<div class="flex items-end justify-between">
+<div>
+<p class="font-title-md text-title-md text-white">Anmod / Chorla Ghat Pass</p>
+<p class="font-body-sm text-body-sm text-surface-variant">Elevation drop: 620m over 28km • Smooth tarmac with hairpin turns</p>
+</div>
+<span class="px-2 py-1 rounded bg-tertiary text-on-tertiary font-label-sm text-label-sm font-bold">Fastest Pass Open</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-sm pt-1 text-center">
+<div class="p-2 rounded bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-secondary block">Peak Elevation</span>
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">712 m</span>
+</div>
+<div class="p-2 rounded bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-secondary block">Toll Plazas</span>
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">4 Gates</span>
+</div>
+<div class="p-2 rounded bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-secondary block">Avg Speed</span>
+<span class="font-numeric-data-md text-numeric-data-md text-on-surface">54.2 km/h</span>
+</div>
+</div>
+</div>
+<!-- Quick Next Action Widget -->
+<div class="bg-primary text-on-primary rounded-xl shadow-lg p-space-lg flex flex-col justify-between space-y-space-lg relative overflow-hidden h-full">
+<div class="space-y-space-sm relative z-10">
+<span class="inline-block px-2.5 py-1 rounded-full bg-white/20 text-white font-label-sm text-label-sm font-semibold tracking-wide uppercase">
+              Recommendation Engine
+            </span>
+<h3 class="font-headline-sm text-headline-sm text-white font-bold leading-tight">
+              Best for 2 Travelers: Train (Express)
+            </h3>
+<p class="font-body-md text-body-md text-primary-fixed leading-relaxed">
+              Booking 3AC saves <strong class="text-white">₹8,400</strong> versus flying and prevents 9 hours of driver fatigue on the Western Ghats.
+            </p>
+</div>
+<div class="space-y-space-sm relative z-10">
+<button class="w-full py-3 px-4 rounded-lg bg-white text-primary hover:bg-surface-container-lowest font-title-sm text-title-sm flex items-center justify-center gap-2 transition-all shadow-md" onclick="alert('Locking itinerary and opening synchronized booking checklist.');" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark_add</span>
+<span>Save &amp; Monitor This Route</span>
+</button>
+<p class="font-label-sm text-label-sm text-center text-primary-fixed/80">RouteWise alerts you if airfare drops below train threshold.</p>
+</div>
+<!-- Decorative vector background geometry -->
+<div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+</div>
+</section>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low mt-space-xl shadow-[0_-1px_8px_rgba(20,36,58,0.02)]"><div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-space-lg"><div class="space-y-space-sm md:col-span-1"><div class="flex items-center gap-space-xs"><img alt="RouteWise Logo" class="h-6 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWBs30vS47DLKt01Zs-lf2WsNtAQesCcup-26i-M4U5OByxWEp0uISI2s7OcN_XJofcfkIpBi4ZqNGBQIIp0oMxB9MC68K1ZIDmgra1QwEg9bSfQPgReidsFqoXarhJbM7MWltK7JNIMMoKzvyVafWBHTqpXtbdUrow48VnNiD0UjUVaFYKK2-Q-Y6sLfQfZiSx-vd6-oKgQMN342vsdxaO0NKDbuetbgMKjCcW_EDqtYPeGfavLkCg"/><span class="font-title-sm text-title-sm text-on-surface">RouteWise</span></div><p class="font-body-sm text-body-sm text-secondary">Mathematical routing and transparent transit expenditure intelligence.</p></div><div class="space-y-space-xs"><h4 class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Intelligence</h4><ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant"><li><a class="hover:text-primary transition-colors" data-path="calculation-methodology" href="#">Calculation Methodology</a></li><li><a class="hover:text-primary transition-colors" data-path="data-sources" href="#">Data Sources &amp; Feeds</a></li><li><a class="hover:text-primary transition-colors" data-path="compare-travel" href="#">Cost Benchmark Index</a></li></ul></div><div class="space-y-space-xs"><h4 class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Regional &amp; Currency</h4><div class="flex flex-wrap gap-space-xs pt-1"><span class="px-2 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">₹ INR (Primary)</span><span class="px-2 py-1 rounded bg-surface text-secondary font-label-sm text-label-sm">$ USD</span><span class="px-2 py-1 rounded bg-surface text-secondary font-label-sm text-label-sm">€ EUR</span></div><p class="font-body-sm text-body-sm text-secondary pt-1">Fuel indexed daily across 28 states &amp; UTs.</p></div><div class="space-y-space-xs"><h4 class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Developer Telemetry</h4><div class="p-space-sm rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface-variant space-y-1"><div>Engine: <span class="text-primary font-semibold">v2.4.1-rc</span></div><div>Toll Matrix Sync: <span class="text-tertiary font-semibold">Active</span></div><div>API Status: <span class="text-primary font-semibold">Nominal</span></div></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-secondary"><div>© 2025 RouteWise Technologies. All mathematical models calibrated.</div><div class="flex items-center gap-space-md"><a class="hover:text-on-surface transition-colors" data-path="data-sources" href="#">Data Compliance</a><a class="hover:text-on-surface transition-colors" data-path="calculation-methodology" href="#">Audit Notes</a></div></div></div></footer></body></html>

@@ -1,0 +1,6 @@
+{
+  "name": "RouteWise — Travel Cost Planner",
+  "description": "Know your trip cost before you go. Compare driving, bus, train, and flight costs with true door-to-door expenses and tolls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

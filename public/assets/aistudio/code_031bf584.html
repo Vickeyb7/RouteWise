@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>RouteWise - Travel Cost Optimization &amp; Route Intelligence</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#747687","primary-fixed-dim":"#b8c4ff","on-secondary-fixed":"#0b1c32","secondary-fixed":"#d4e3ff","on-background":"#121c2a","background":"#f8f9ff","surface-variant":"#d9e3f6","tertiary-container":"#007972","on-error":"#ffffff","on-primary-fixed-variant":"#0036bc","surface-container":"#e6eeff","inverse-primary":"#b8c4ff","on-primary-fixed":"#001355","secondary":"#505f78","surface-dim":"#d0daee","error-container":"#ffdad6","on-error-container":"#93000a","secondary-fixed-dim":"#b7c7e4","primary-fixed":"#dde1ff","on-secondary":"#ffffff","on-surface":"#121c2a","surface-container-highest":"#d9e3f6","on-primary-container":"#ecedff","secondary-container":"#d0e0fe","surface-container-low":"#eff3ff","error":"#ba1a1a","tertiary-fixed-dim":"#5dd9ce","tertiary":"#005e58","on-secondary-fixed-variant":"#38475f","inverse-surface":"#273140","inverse-on-surface":"#ebf1ff","on-surface-variant":"#434655","primary":"#0040da","primary-container":"#315cf5","surface-tint":"#1b4de7","surface":"#f8f9ff","surface-bright":"#f8f9ff","tertiary-fixed":"#7cf6eb","outline-variant":"#c4c5d8","on-tertiary-fixed-variant":"#00504b","on-tertiary-container":"#9ffff5","on-tertiary-fixed":"#00201d","on-primary":"#ffffff","on-tertiary":"#ffffff","on-secondary-container":"#54637c","surface-container-lowest":"#ffffff","surface-container-high":"#dfe9fc"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin-tablet":"1.5rem","margin-mobile":"1rem","gutter-tablet":"1rem","space-xs":"0.25rem","gutter-mobile":"0.75rem","space-xl":"2.5rem","margin":"2rem","space-md":"1rem","gutter":"1.25rem","space-sm":"0.5rem","space-lg":"1.5rem"},fontFamily:{"label-md":["Inter"],"display-lg":["Inter"],"title-sm":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"numeric-data-md":["Inter"],"display-lg-mobile":["Inter"],"title-md":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"],"headline-lg-mobile":["Inter"],"label-sm":["Inter"],"body-lg":["Inter"],"numeric-data-lg":["Inter"],"headline-md":["Inter"]},fontSize:{"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"500"}],"display-lg":["40px",{"lineHeight":"48px","letterSpacing":"-0.03em","fontWeight":"700"}],"title-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"numeric-data-md":["18px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-lg-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"title-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.03em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"-0.005em","fontWeight":"400"}],"numeric-data-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(20,36,58,0.04)]"><div class="bg-surface-container-high py-1.5 px-margin-mobile md:px-margin-tablet lg:px-margin"><div class="max-w-[1440px] mx-auto flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><div class="flex items-center gap-space-xs"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>Demo Data Mode: Illustrative estimates for prototype evaluation</span></div><div class="hidden md:flex items-center gap-space-md"><span class="text-outline font-label-sm text-label-sm">Telemetry: Live</span><span class="text-outline font-label-sm text-label-sm">Latency: 18ms</span></div></div></div><div class="h-16 max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm" data-path="plan-a-trip" href="#"><img alt="RouteWise Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWBs30vS47DLKt01Zs-lf2WsNtAQesCcup-26i-M4U5OByxWEp0uISI2s7OcN_XJofcfkIpBi4ZqNGBQIIp0oMxB9MC68K1ZIDmgra1QwEg9bSfQPgReidsFqoXarhJbM7MWltK7JNIMMoKzvyVafWBHTqpXtbdUrow48VnNiD0UjUVaFYKK2-Q-Y6sLfQfZiSx-vd6-oKgQMN342vsdxaO0NKDbuetbgMKjCcW_EDqtYPeGfavLkCg"/><span class="font-title-md text-title-md text-on-surface tracking-tight">RouteWise</span></a><nav class="hidden lg:flex items-center gap-space-xs p-1 rounded-lg bg-surface-container-low" data-active-classes="bg-secondary-container text-on-secondary-fixed font-title-sm"><a aria-current="page" class="px-space-md py-1.5 rounded-lg transition-colors bg-secondary-container text-on-secondary-fixed font-title-sm" data-path="plan-a-trip" href="#">Plan a Trip</a><a class="px-space-md py-1.5 rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="compare-travel" href="#">Compare Travel</a><a class="px-space-md py-1.5 rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="my-trips" href="#">My Trips</a><a class="px-space-md py-1.5 rounded-lg text-on-surface-variant font-title-sm text-title-sm hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="how-it-works" href="#">How It Works</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md"><span class="text-tertiary font-bold">₹</span><span>INR</span></div><a class="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm hover:bg-primary-container transition-all shadow-[0_1px_3px_rgba(20,36,58,0.04)]" data-path="plan-a-trip" href="#">Plan a Trip</a><button class="flex items-center justify-center focus:outline-none ring-2 ring-primary/20 rounded-full" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAemYO4IcT4WR5w-Bf5YN-aUvnYAw7bHqpmoib_WV9fErRofzNBdPDSqiBUKeqKI98vcA_6mzCLJejZKhlpRItjsB0y3lxvWUn5JVtNI6TqbLPqCLAtpJ_GPWbUuWCohhhg2u0uCugdmam0Jtdv-xh4pQh4JzCACNEVaqL5CtfhiqSdi0o7eLv5rl2jmSDEaOd-qKYRY6I3K_5yYqQRqTM_pEJjwf6HUmt7pkzEwR2ZV-ivy7vcNHApkA"/></button></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Search Hero Segment -->
+<section class="relative w-full overflow-hidden bg-surface py-space-xl">
+<!-- Ambient visual gradient & grid overlay -->
+<div class="absolute -top-32 right-1/4 w-96 h-96 rounded-full bg-primary-fixed blur-3xl opacity-40 pointer-events-none"></div>
+<div class="absolute top-1/2 -left-20 w-80 h-80 rounded-full bg-tertiary-fixed blur-3xl opacity-30 pointer-events-none"></div>
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin relative z-10">
+<!-- Headline & Introduction -->
+<div class="max-w-3xl mb-space-lg">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm mb-space-sm shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>True Door-to-Door Multimodal Financial Telemetry</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight mb-space-xs">
+          Every route has a cost. <br class="hidden sm:block"/>
+<span class="text-primary">Find the one that works for you.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-secondary">
+          Compare driving, bus, train and flight costs—including terminal transfers, live fuel index, highway toll plazas, and true elapsed travel time.
+        </p>
+</div>
+<!-- Core Trip Planning Card -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-xl p-space-md md:p-space-lg relative">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-md mb-space-md border-b border-surface-container">
+<!-- Trip Type Pill Toggle -->
+<div class="inline-flex p-1 rounded-lg bg-surface-container-low" id="trip-type-toggle">
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-primary font-title-sm text-title-sm shadow-sm transition-all" data-val="one-way" type="button">One-Way</button>
+<button class="px-space-md py-1.5 rounded-lg text-secondary font-title-sm text-title-sm hover:text-on-surface transition-all" data-val="round-trip" type="button">Round Trip</button>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md">
+<span class="material-symbols-outlined text-primary text-base">ev_station</span>
+<span class="text-on-surface font-semibold">FASTag Live</span>
+<span class="text-tertiary font-bold ml-1">Synced</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant hidden sm:block"></div>
+<a class="hidden sm:inline-flex items-center gap-1 text-primary hover:text-primary-container font-title-sm text-title-sm transition-colors" href="#transparency">
+<span>Methodology assumptions</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Main Query Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-gutter items-center">
+<!-- Origin & Destination Pair with Swap Button -->
+<div class="lg:col-span-5 relative flex flex-col sm:flex-row items-center gap-space-xs">
+<div class="w-full bg-surface-container-low rounded-lg p-space-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-xl">trip_origin</span>
+<div class="flex-1 min-w-0">
+<label class="block font-label-sm text-label-sm text-secondary uppercase tracking-wider">Origin</label>
+<input class="w-full bg-transparent font-title-md text-title-md text-on-surface focus:outline-none truncate" id="origin-input" type="text" value="Pune, Maharashtra"/>
+</div>
+</div>
+<!-- Swap Button -->
+<button aria-label="Swap origin and destination" class="z-20 sm:-mx-3 my-1 sm:my-0 flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-high hover:bg-primary hover:text-on-primary text-secondary transition-all shadow-md" id="swap-locations-btn" type="button">
+<span class="material-symbols-outlined text-base">swap_horiz</span>
+</button>
+<div class="w-full bg-surface-container-low rounded-lg p-space-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
+<div class="flex-1 min-w-0">
+<label class="block font-label-sm text-label-sm text-secondary uppercase tracking-wider">Destination</label>
+<input class="w-full bg-transparent font-title-md text-title-md text-on-surface focus:outline-none truncate" id="dest-input" type="text" value="Goa, India"/>
+</div>
+</div>
+</div>
+<!-- Date Selector -->
+<div class="lg:col-span-2">
+<div class="w-full bg-surface-container-low rounded-lg p-space-sm flex items-center gap-space-sm cursor-pointer hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-secondary text-xl">calendar_month</span>
+<div class="flex-1 min-w-0">
+<label class="block font-label-sm text-label-sm text-secondary uppercase tracking-wider">Departure</label>
+<div class="font-title-md text-title-md text-on-surface truncate">18 Oct 2025</div>
+</div>
+</div>
+</div>
+<!-- Passengers Stepper -->
+<div class="lg:col-span-2">
+<div class="w-full bg-surface-container-low rounded-lg p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-secondary text-xl">group</span>
+<div class="min-w-0">
+<label class="block font-label-sm text-label-sm text-secondary uppercase tracking-wider">Passengers</label>
+<div class="font-title-md text-title-md text-on-surface truncate" id="passenger-count-label">2 Travellers</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 rounded bg-surface-container-high hover:bg-surface-variant flex items-center justify-center text-on-surface font-bold text-sm" id="passenger-dec" type="button">-</button>
+<button class="w-6 h-6 rounded bg-surface-container-high hover:bg-surface-variant flex items-center justify-center text-on-surface font-bold text-sm" id="passenger-inc" type="button">+</button>
+</div>
+</div>
+</div>
+<!-- Vehicle Preset Filter -->
+<div class="lg:col-span-3">
+<div class="w-full bg-surface-container-low rounded-lg p-space-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-xl">directions_car</span>
+<div class="flex-1 min-w-0">
+<label class="block font-label-sm text-label-sm text-secondary uppercase tracking-wider">Vehicle Profile</label>
+<select class="w-full bg-transparent font-title-sm text-title-sm text-on-surface focus:outline-none cursor-pointer truncate">
+<option selected="">Petrol Hatchback/Sedan (15 km/L)</option>
+<option>Diesel SUV (13.5 km/L)</option>
+<option>Electric EV (6.5 km/kWh)</option>
+<option>CNG Compact (22 km/kg)</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Action Drawer within Hero Card -->
+<div class="mt-space-md pt-space-md border-t border-surface-container flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm flex-wrap text-secondary font-label-md text-label-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-fixed">
+<span class="material-symbols-outlined text-sm">calculate</span>
+              Auto cost-split: <strong class="ml-1 text-on-surface" id="cost-split-tag">50% per passenger</strong>
+</span>
+<span class="inline-flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-tertiary">check_circle</span>
+              NHAI FASTag toll database auto-mapped
+            </span>
+</div>
+<div class="flex items-center gap-space-md w-full sm:w-auto">
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-6 py-3 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container shadow-lg shadow-primary/20 transition-all" href="#interactive-sample">
+<span>Compare my trip</span>
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Quick Metrics Strip -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter mt-space-md text-on-surface">
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-2xl">local_gas_station</span>
+<div>
+<div class="font-numeric-data-md text-numeric-data-md">₹104.21 / L</div>
+<div class="font-label-sm text-label-sm text-secondary">Maharashtra Regular Petrol</div>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-2xl">toll</span>
+<div>
+<div class="font-numeric-data-md text-numeric-data-md">₹620 Total</div>
+<div class="font-label-sm text-label-sm text-secondary">4 FASTag Expressways</div>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-2xl">conversion_path</span>
+<div>
+<div class="font-numeric-data-md text-numeric-data-md">462.4 km</div>
+<div class="font-label-sm text-label-sm text-secondary">AH47 &amp; NH66 Highway Corridor</div>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-2xl">speed</span>
+<div>
+<div class="font-numeric-data-md text-numeric-data-md">8h 45m</div>
+<div class="font-label-sm text-label-sm text-secondary">Estimated Driving Time</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 1: What You Can Compare (4 Transit Modes Bento) -->
+<section class="w-full py-space-xl bg-surface-container-low">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg gap-space-sm">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Uncompromising Breakdown</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">What You Can Compare</h2>
+<p class="font-body-md text-body-md text-secondary mt-1 max-w-xl">Every commute option is broken down to its raw ledger: ticketing, dynamic highway tolls, final-mile cabs, and wait time penalties.</p>
+</div>
+<div class="text-right hidden md:block">
+<span class="font-label-sm text-label-sm text-secondary">Benchmarked route: Pune ➔ Goa</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Mode 1: Car -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">directions_car</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">High Flexibility</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Personal Car</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Real mileage calibrated by road incline, live FASTag toll deductions, and destination parking.</p>
+<div class="space-y-space-xs mb-space-md font-body-sm text-body-sm">
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Fuel (462 km @ 15 km/L)</span>
+<span class="font-semibold text-on-surface">₹3,210</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">FASTag Highway Tolls</span>
+<span class="font-semibold text-on-surface">₹620</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Parking &amp; Wear buffer</span>
+<span class="font-semibold text-on-surface">₹400</span>
+</div>
+</div>
+</div>
+<div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div>
+<div class="font-label-sm text-label-sm text-secondary">Total (1-4 pax fixed)</div>
+<div class="font-numeric-data-md text-numeric-data-md text-primary">₹4,230</div>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-secondary">Door-to-Door</div>
+<div class="font-numeric-data-md text-numeric-data-md text-on-surface">8h 45m</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mode 2: Bus -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">directions_bus</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Budget Sleeper</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Intercity Bus</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Express multi-axle luxury sleeper berth plus auto/cab transfers at boarding and drop terminals.</p>
+<div class="space-y-space-xs mb-space-md font-body-sm text-body-sm">
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">AC Sleeper (2 Tickets)</span>
+<span class="font-semibold text-on-surface">₹2,800</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Swargate Pick-up Auto</span>
+<span class="font-semibold text-on-surface">₹220</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Panaji Transfer Cab</span>
+<span class="font-semibold text-on-surface">₹650</span>
+</div>
+</div>
+</div>
+<div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div>
+<div class="font-label-sm text-label-sm text-secondary">2 Travellers Total</div>
+<div class="font-numeric-data-md text-numeric-data-md text-on-surface">₹3,670</div>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-secondary">Door-to-Door</div>
+<div class="font-numeric-data-md text-numeric-data-md text-on-surface">11h 15m</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mode 3: Train -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-2xl">train</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">Best Scenic Value</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Train (Vande Bharat)</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Station transfers, reservation fees, dynamic IRCTC charges and Madgaon onward transport.</p>
+<div class="space-y-space-xs mb-space-md font-body-sm text-body-sm">
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">2x CC Reservation</span>
+<span class="font-semibold text-on-surface">₹2,950</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Pune Junction Drop</span>
+<span class="font-semibold text-on-surface">₹250</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Madgaon Final Transfer</span>
+<span class="font-semibold text-on-surface">₹750</span>
+</div>
+</div>
+</div>
+<div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div>
+<div class="font-label-sm text-label-sm text-secondary">2 Travellers Total</div>
+<div class="font-numeric-data-md text-numeric-data-md text-tertiary">₹3,950</div>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-secondary">Door-to-Door</div>
+<div class="font-numeric-data-md text-numeric-data-md text-on-surface">9h 20m</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mode 4: Flight -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">flight</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">High Transfer Overhead</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Commercial Flight</h3>
+<p class="font-body-sm text-body-sm text-secondary mb-space-md">Airfares, airport premium city cabs, security lines, baggage handling, and waiting runway blocks.</p>
+<div class="space-y-space-xs mb-space-md font-body-sm text-body-sm">
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Base Airfare (2 Pax)</span>
+<span class="font-semibold text-on-surface">₹7,400</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Pune Apt Cab (Surge)</span>
+<span class="font-semibold text-on-surface">₹780</span>
+</div>
+<div class="flex justify-between py-1 border-b border-surface-container">
+<span class="text-secondary">Mopa Apt Airport Taxi</span>
+<span class="font-semibold text-on-surface">₹1,850</span>
+</div>
+</div>
+</div>
+<div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div>
+<div class="font-label-sm text-label-sm text-secondary">2 Travellers Total</div>
+<div class="font-numeric-data-md text-numeric-data-md text-on-surface">₹10,030</div>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-secondary">Door-to-Door</div>
+<div class="font-numeric-data-md text-numeric-data-md text-on-surface">5h 15m</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Why Door-to-Door Cost Matters (Visual Infographic) -->
+<section class="w-full py-space-xl bg-surface">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin">
+<div class="max-w-2xl mb-space-lg">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Unseen Surcharges</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Why Door-to-Door Cost Matters</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Airfares look fast, but city edge airports cost up to 35% of your travel budget in cab fares and 3 hours in airport security queues.</p>
+</div>
+<!-- Comparative Timeline / Hidden Cost Diagram -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<!-- Left: Visual Journey Comparison -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="font-title-md text-title-md text-on-surface mb-space-md flex items-center justify-between">
+<span>Hidden Expense Journey Breakdown (Pune ➔ Goa)</span>
+<span class="font-label-sm text-label-sm text-secondary">Calculated for 2 Adults</span>
+</div>
+<!-- Mode Flight Deep Dive -->
+<div class="mb-space-lg space-y-space-xs">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="font-semibold text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-base">flight</span> Flight (Advertised Base: ₹7,400)
+              </span>
+<span class="text-error font-bold">Total: ₹10,030 (+35.5% Hidden)</span>
+</div>
+<!-- Stacked Segment Bar -->
+<div class="w-full h-8 rounded-lg overflow-hidden flex font-label-sm text-label-sm text-on-primary">
+<div class="h-full bg-secondary flex items-center justify-center px-2 truncate" style="width: 12%;" title="Pune City to Lohegaon Airport Taxi: ₹780">
+                City Cab: ₹780
+              </div>
+<div class="h-full bg-primary flex items-center justify-center px-2 truncate" style="width: 65%;" title="Base Ticket: ₹7,400">
+                Ticket: ₹7,400
+              </div>
+<div class="h-full bg-error flex items-center justify-center px-2 truncate" style="width: 23%;" title="Mopa Airport to Coastal Hotel Taxi: ₹1,850">
+                Mopa Taxi: ₹1,850
+              </div>
+</div>
+<div class="flex justify-between text-secondary font-label-sm text-label-sm pt-1">
+<span>Cab to Airport (1h 10m)</span>
+<span>Security &amp; Gate Wait (2h 00m)</span>
+<span>Flight (1h 05m)</span>
+<span>Arrival Cab (1h 00m)</span>
+</div>
+</div>
+<!-- Mode Driving Deep Dive -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="font-semibold text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-base">directions_car</span> Car (Direct Expressway Route)
+              </span>
+<span class="text-tertiary font-bold">Total: ₹4,230 (Zero transfers)</span>
+</div>
+<!-- Stacked Segment Bar -->
+<div class="w-full h-8 rounded-lg overflow-hidden flex font-label-sm text-label-sm text-on-primary">
+<div class="h-full bg-primary-container flex items-center justify-center px-2 truncate" style="width: 76%;" title="Fuel (Petrol): ₹3,210">
+                Direct Fuel: ₹3,210
+              </div>
+<div class="h-full bg-tertiary flex items-center justify-center px-2 truncate" style="width: 15%;" title="FASTag Tolls: ₹620">
+                Tolls: ₹620
+              </div>
+<div class="h-full bg-secondary flex items-center justify-center px-2 truncate" style="width: 9%;" title="Buffer: ₹400">
+                Misc: ₹400
+              </div>
+</div>
+<div class="flex justify-between text-secondary font-label-sm text-label-sm pt-1">
+<span>Drive Starts at Doorstep</span>
+<span>Scenic Western Ghats Break (45m)</span>
+<span>Door-to-Door Delivery</span>
+</div>
+</div>
+</div>
+<!-- Right: Reality Check Bento Cards -->
+<div class="lg:col-span-4 space-y-space-md">
+<div class="p-space-md rounded-xl bg-surface-container text-on-surface shadow-sm">
+<div class="flex items-center gap-space-sm mb-space-xs">
+<div class="w-8 h-8 rounded-full bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-base">local_taxi</span>
+</div>
+<span class="font-title-sm text-title-sm">Airport Cab Surcharge</span>
+</div>
+<div class="font-numeric-data-lg text-numeric-data-lg text-error">₹2,630</div>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Average two-way airport cab fare between non-metro zones. Frequently completely omitted by travel booking portals.</p>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container text-on-surface shadow-sm">
+<div class="flex items-center gap-space-sm mb-space-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-base">hourglass_top</span>
+</div>
+<span class="font-title-sm text-title-sm">Dead Transit Overhead</span>
+</div>
+<div class="font-numeric-data-lg text-numeric-data-lg text-on-surface">3h 40m</div>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Time spent in security, baggage claims, and taxi pickups. Your 1-hour flight is actually nearly 5 hours door-to-door.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Group Tipping Point Calculator Preview (Dynamic Widget) -->
+<section class="w-full py-space-xl bg-surface-container-low">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin">
+<div class="text-center max-w-3xl mx-auto mb-space-lg">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Mathematical Economics</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">The Group Tipping Point Calculator</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Solo travelers thrive on rail and buses. Groups of 3 or more invert the curve: driving suddenly undercuts trains and crushes flights by over 70%.</p>
+</div>
+<!-- Interactive Calculator Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md md:p-space-lg shadow-sm">
+<!-- Controls Bar -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md p-space-md rounded-xl bg-surface-container mb-space-lg">
+<div>
+<span class="font-title-md text-title-md text-on-surface">Select Travel Group Size:</span>
+<p class="font-body-sm text-body-sm text-secondary">Watch the per-person financial threshold rebalance instantaneously.</p>
+</div>
+<!-- Interactive Group Stepper Selector -->
+<div class="inline-flex rounded-lg bg-surface-container-high p-1" id="group-size-selector">
+<button class="group-size-btn px-4 py-2 rounded-lg text-secondary font-title-sm text-title-sm hover:text-on-surface transition-all" data-size="1" type="button">1 Person</button>
+<button class="group-size-btn px-4 py-2 rounded-lg text-secondary font-title-sm text-title-sm hover:text-on-surface transition-all" data-size="2" type="button">2 Persons</button>
+<button class="group-size-btn px-4 py-2 rounded-lg text-secondary font-title-sm text-title-sm hover:text-on-surface transition-all" data-size="3" type="button">3 Persons</button>
+<button class="group-size-btn px-4 py-2 rounded-lg bg-surface-container-lowest text-primary font-title-sm text-title-sm shadow-sm transition-all" data-size="4" type="button">4 Persons (Optimal)</button>
+</div>
+</div>
+<!-- Comparative Output Ledger -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter text-center">
+<!-- Car Per Person -->
+<div class="p-space-md rounded-xl bg-surface border-2 border-primary/20 relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">
+              Lowest Group Fare
+            </div>
+<div class="w-12 h-12 mx-auto rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-space-sm">
+<span class="material-symbols-outlined text-2xl">directions_car</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface">Car (Fixed Cost Split)</h4>
+<div class="my-space-sm">
+<div class="font-numeric-data-lg text-numeric-data-lg text-primary" id="car-cost-per-pax">₹1,057</div>
+<span class="font-label-sm text-label-sm text-secondary">per person (4 pax)</span>
+</div>
+<div class="text-secondary font-body-sm text-body-sm border-t border-surface-container pt-space-xs">
+              Total ₹4,230 shared across 4 travelers. Complete freedom of stops.
+            </div>
+</div>
+<!-- Train Per Person -->
+<div class="p-space-md rounded-xl bg-surface border border-surface-container">
+<div class="w-12 h-12 mx-auto rounded-full bg-surface-container-high flex items-center justify-center text-tertiary mb-space-sm">
+<span class="material-symbols-outlined text-2xl">train</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface">Train (Linear Scaled)</h4>
+<div class="my-space-sm">
+<div class="font-numeric-data-lg text-numeric-data-lg text-on-surface" id="train-cost-per-pax">₹1,975</div>
+<span class="font-label-sm text-label-sm text-secondary">per person (4 pax)</span>
+</div>
+<div class="text-secondary font-body-sm text-body-sm border-t border-surface-container pt-space-xs">
+              Every passenger pays ₹1,475 ticket + shared station transit taxi fees.
+            </div>
+</div>
+<!-- Flight Per Person -->
+<div class="p-space-md rounded-xl bg-surface border border-surface-container">
+<div class="w-12 h-12 mx-auto rounded-full bg-surface-container-high flex items-center justify-center text-secondary mb-space-sm">
+<span class="material-symbols-outlined text-2xl">flight</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface">Flight (Heavy Per-Seat)</h4>
+<div class="my-space-sm">
+<div class="font-numeric-data-lg text-numeric-data-lg text-on-surface" id="flight-cost-per-pax">₹4,357</div>
+<span class="font-label-sm text-label-sm text-secondary">per person (4 pax)</span>
+</div>
+<div class="text-secondary font-body-sm text-body-sm border-t border-surface-container pt-space-xs">
+              4x Airfares + large SUV airport cab transfers. Total trip: ₹17,430.
+            </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Interactive Sample Routes (Carousel Cards) -->
+<section class="w-full py-space-xl bg-surface" id="interactive-sample">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin">
+<div class="flex items-center justify-between mb-space-lg">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Ready Calculations</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Popular Optimized Corridors</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Pre-computed live benchmarks across India's busiest transit corridors.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Corridor 1: Mumbai to Pune -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-secondary font-label-sm text-label-sm mb-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface">148 km</span>
+<span>Expressway Fastag</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">Mumbai ➔ Pune</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Via Mumbai-Pune Expressway</p>
+<div class="mt-space-md space-y-1.5 font-label-md text-label-md">
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">directions_car</span> Car</span>
+<span class="font-bold">₹1,840</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">train</span> Deccan Queen</span>
+<span class="font-bold text-tertiary">₹380</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">directions_bus</span> Shivneri AC</span>
+<span class="font-bold">₹540</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Train: Save 79%</span>
+<button class="corridor-select text-primary hover:text-primary-container font-title-sm text-title-sm flex items-center gap-1" data-dest="Pune, Maharashtra" data-origin="Mumbai, Maharashtra">
+              Load <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Corridor 2: Delhi to Jaipur -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-secondary font-label-sm text-label-sm mb-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface">281 km</span>
+<span>NH48 / DME</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">Delhi ➔ Jaipur</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Delhi-Mumbai Expressway Spur</p>
+<div class="mt-space-md space-y-1.5 font-label-md text-label-md">
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">directions_car</span> Car</span>
+<span class="font-bold">₹2,950</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">train</span> Vande Bharat</span>
+<span class="font-bold text-tertiary">₹1,150</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">flight</span> Flight</span>
+<span class="font-bold">₹4,200</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Rail Beats Flight Time</span>
+<button class="corridor-select text-primary hover:text-primary-container font-title-sm text-title-sm flex items-center gap-1" data-dest="Jaipur, Rajasthan" data-origin="Delhi, NCR">
+              Load <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Corridor 3: Bengaluru to Chennai -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-secondary font-label-sm text-label-sm mb-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface">346 km</span>
+<span>Expressway Toll</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">Bengaluru ➔ Chennai</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Via Hosur / Kanchipuram</p>
+<div class="mt-space-md space-y-1.5 font-label-md text-label-md">
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">directions_car</span> Car</span>
+<span class="font-bold">₹3,410</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">train</span> Shatabdi Exp</span>
+<span class="font-bold text-tertiary">₹980</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">flight</span> Airfare</span>
+<span class="font-bold">₹3,900</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Shatabdi: Optimal</span>
+<button class="corridor-select text-primary hover:text-primary-container font-title-sm text-title-sm flex items-center gap-1" data-dest="Chennai, Tamil Nadu" data-origin="Bengaluru, Karnataka">
+              Load <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Corridor 4: Pune to Goa -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between border-2 border-primary/30">
+<div>
+<div class="flex items-center justify-between text-secondary font-label-sm text-label-sm mb-space-xs">
+<span class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-bold">Current Query</span>
+<span>462 km</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">Pune ➔ Goa</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Via Satara / Kolhapur / Sawantwadi</p>
+<div class="mt-space-md space-y-1.5 font-label-md text-label-md">
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">directions_car</span> Car</span>
+<span class="font-bold text-primary">₹4,230 (Total)</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">train</span> Vande Bharat</span>
+<span class="font-bold">₹1,975/pax</span>
+</div>
+<div class="flex justify-between text-on-surface">
+<span class="text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">flight</span> Flight</span>
+<span class="font-bold">₹5,015/pax</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between">
+<span class="text-primary font-label-sm text-label-sm font-semibold">Active Selection</span>
+<span class="font-title-sm text-title-sm text-primary flex items-center gap-1">
+              Selected <span class="material-symbols-outlined text-sm">check</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Data Transparency & Verified Sources -->
+<section class="w-full py-space-xl bg-surface-container-low border-t border-surface-container" id="transparency">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin">
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+<div>
+<div class="inline-flex items-center gap-space-xs px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm mb-1">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span>100% Deterministic Financial Model</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Data Transparency &amp; Verified Sources</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">RouteWise does not use generalized approximations. We tap directly into statutory feeds.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container text-right">
+<div class="font-label-sm text-label-sm text-secondary">Latest Toll Matrix Sync</div>
+<div class="font-numeric-data-md text-numeric-data-md text-tertiary">06:00 IST Today</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter font-body-sm text-body-sm">
+<!-- Source 1 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-primary text-xl">local_gas_station</span>
+<strong class="text-on-surface font-title-sm text-title-sm">IOCL &amp; BPCL Fuel APIs</strong>
+</div>
+<p class="text-secondary mb-space-sm">Daily revised pump rates synchronized across 28 states &amp; union territories down to municipal district borders.</p>
+<div class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Live daily index
+            </div>
+</div>
+<!-- Source 2 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-primary text-xl">toll</span>
+<strong class="text-on-surface font-title-sm text-title-sm">NHAI Toll Information</strong>
+</div>
+<p class="text-secondary mb-space-sm">National Highway Authority of India FASTag plazas with exact vehicle classification rates and return journey concessions.</p>
+<div class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> 980+ Plazas Mapped
+            </div>
+</div>
+<!-- Source 3 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-tertiary text-xl">train</span>
+<strong class="text-on-surface font-title-sm text-title-sm">IRCTC Dynamic Tariffs</strong>
+</div>
+<p class="text-secondary mb-space-sm">Indian Railways PRS timetable matrix, tatkal surcharges, catering fees and dynamic fare surges on Premium Specials.</p>
+<div class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Class-Specific CC/3A
+            </div>
+</div>
+<!-- Source 4 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+<strong class="text-on-surface font-title-sm text-title-sm">DGCA Regulatory Guidelines</strong>
+</div>
+<p class="text-secondary mb-space-sm">Civil aviation passenger charters, standardized hand baggage allowances, fuel surcharges, and airport development fees (UDF).</p>
+<div class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Standard UDF/ADF
+            </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  (function() {
+    // 1. Origin / Destination Swap functionality
+    const swapBtn = document.getElementById('swap-locations-btn');
+    const originInput = document.getElementById('origin-input');
+    const destInput = document.getElementById('dest-input');
+
+    if (swapBtn && originInput && destInput) {
+      swapBtn.addEventListener('click', function() {
+        const temp = originInput.value;
+        originInput.value = destInput.value;
+        destInput.value = temp;
+      });
+    }
+
+    // 2. Trip Type selector toggle
+    const toggleContainer = document.getElementById('trip-type-toggle');
+    if (toggleContainer) {
+      const buttons = toggleContainer.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          buttons.forEach(b => {
+            b.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+            b.classList.add('text-secondary');
+          });
+          this.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+          this.classList.remove('text-secondary');
+        });
+      });
+    }
+
+    // 3. Passenger Counter Stepper
+    let passengerCount = 2;
+    const decBtn = document.getElementById('passenger-dec');
+    const incBtn = document.getElementById('passenger-inc');
+    const countLabel = document.getElementById('passenger-count-label');
+    const costSplitTag = document.getElementById('cost-split-tag');
+
+    function updatePassengerDisplay() {
+      if (countLabel) {
+        countLabel.textContent = passengerCount + (passengerCount === 1 ? ' Traveller' : ' Travellers');
+      }
+      if (costSplitTag) {
+        const pct = Math.round(100 / passengerCount);
+        costSplitTag.textContent = pct + '% per passenger';
+      }
+      updateDynamicTipping(passengerCount);
+    }
+
+    if (decBtn && incBtn) {
+      decBtn.addEventListener('click', function() {
+        if (passengerCount > 1) {
+          passengerCount--;
+          updatePassengerDisplay();
+        }
+      });
+      incBtn.addEventListener('click', function() {
+        if (passengerCount < 8) {
+          passengerCount++;
+          updatePassengerDisplay();
+        }
+      });
+    }
+
+    // 4. Group Tipping Point Calculator Buttons
+    const groupButtons = document.querySelectorAll('.group-size-btn');
+    const carPerPax = document.getElementById('car-cost-per-pax');
+    const trainPerPax = document.getElementById('train-cost-per-pax');
+    const flightPerPax = document.getElementById('flight-cost-per-pax');
+
+    const costModels = {
+      1: { car: '₹4,230', train: '₹2,475', flight: '₹10,030' },
+      2: { car: '₹2,115', train: '₹1,975', flight: '₹5,015' },
+      3: { car: '₹1,410', train: '₹1,808', flight: '₹4,450' },
+      4: { car: '₹1,057', train: '₹1,725', flight: '₹4,357' }
+    };
+
+    function updateDynamicTipping(size) {
+      const normalizedSize = Math.min(Math.max(size, 1), 4);
+      if (costModels[normalizedSize]) {
+        if (carPerPax) carPerPax.textContent = costModels[normalizedSize].car;
+        if (trainPerPax) trainPerPax.textContent = costModels[normalizedSize].train;
+        if (flightPerPax) flightPerPax.textContent = costModels[normalizedSize].flight;
+      }
+      
+      // Update UI active states in the calculator row
+      groupButtons.forEach(btn => {
+        if (parseInt(btn.getAttribute('data-size')) === normalizedSize) {
+          btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+          btn.classList.remove('text-secondary');
+        } else {
+          btn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+          btn.classList.add('text-secondary');
+        }
+      });
+    }
+
+    groupButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const size = parseInt(this.getAttribute('data-size'));
+        passengerCount = size;
+        updatePassengerDisplay();
+      });
+    });
+
+    // 5. Corridor Quick Selectors
+    const corridorBtns = document.querySelectorAll('.corridor-select');
+    corridorBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const origin = this.getAttribute('data-origin');
+        const dest = this.getAttribute('data-dest');
+        if (originInput && destInput) {
+          originInput.value = origin;
+          destInput.value = dest;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+
+  })();
+</script></main><footer class="w-full bg-surface-container-low mt-space-xl shadow-[0_-1px_8px_rgba(20,36,58,0.02)]"><div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-space-lg"><div class="space-y-space-sm md:col-span-1"><div class="flex items-center gap-space-xs"><img alt="RouteWise Logo" class="h-6 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWBs30vS47DLKt01Zs-lf2WsNtAQesCcup-26i-M4U5OByxWEp0uISI2s7OcN_XJofcfkIpBi4ZqNGBQIIp0oMxB9MC68K1ZIDmgra1QwEg9bSfQPgReidsFqoXarhJbM7MWltK7JNIMMoKzvyVafWBHTqpXtbdUrow48VnNiD0UjUVaFYKK2-Q-Y6sLfQfZiSx-vd6-oKgQMN342vsdxaO0NKDbuetbgMKjCcW_EDqtYPeGfavLkCg"/><span class="font-title-sm text-title-sm text-on-surface">RouteWise</span></div><p class="font-body-sm text-body-sm text-secondary">Mathematical routing and transparent transit expenditure intelligence.</p></div><div class="space-y-space-xs"><h4 class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Intelligence</h4><ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant"><li><a class="hover:text-primary transition-colors" data-path="calculation-methodology" href="#">Calculation Methodology</a></li><li><a class="hover:text-primary transition-colors" data-path="data-sources" href="#">Data Sources &amp; Feeds</a></li><li><a class="hover:text-primary transition-colors" data-path="compare-travel" href="#">Cost Benchmark Index</a></li></ul></div><div class="space-y-space-xs"><h4 class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Regional &amp; Currency</h4><div class="flex flex-wrap gap-space-xs pt-1"><span class="px-2 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">₹ INR (Primary)</span><span class="px-2 py-1 rounded bg-surface text-secondary font-label-sm text-label-sm">$ USD</span><span class="px-2 py-1 rounded bg-surface text-secondary font-label-sm text-label-sm">€ EUR</span></div><p class="font-body-sm text-body-sm text-secondary pt-1">Fuel indexed daily across 28 states &amp; UTs.</p></div><div class="space-y-space-xs"><h4 class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Developer Telemetry</h4><div class="p-space-sm rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface-variant space-y-1"><div>Engine: <span class="text-primary font-semibold">v2.4.1-rc</span></div><div>Toll Matrix Sync: <span class="text-tertiary font-semibold">Active</span></div><div>API Status: <span class="text-primary font-semibold">Nominal</span></div></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-secondary"><div>© 2025 RouteWise Technologies. All mathematical models calibrated.</div><div class="flex items-center gap-space-md"><a class="hover:text-on-surface transition-colors" data-path="data-sources" href="#">Data Compliance</a><a class="hover:text-on-surface transition-colors" data-path="calculation-methodology" href="#">Audit Notes</a></div></div></div></footer></body></html>
