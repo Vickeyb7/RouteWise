@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TripInputs, TripCalculationResult, TransportModeEstimate } from '../types/index.ts';
 import { formatINR } from '../lib/tripCalculations.ts';
+import { TripCostPieChart } from '../components/TripCostPieChart.tsx';
 
 interface ComparePageProps {
   inputs: TripInputs;
@@ -29,6 +30,8 @@ export const ComparePage: React.FC<ComparePageProps> = ({
   const [viewPerPerson, setViewPerPerson] = useState(false);
   // Transparent calculation accordion state
   const [showFormulas, setShowFormulas] = useState(false);
+  // Selected mode for deep-dive pie chart breakdown (defaulting to personal car road trip)
+  const [selectedModeId, setSelectedModeId] = useState<string>('car');
 
   const carMode = result.modes.find(m => m.id === 'car')!;
   const busMode = result.modes.find(m => m.id === 'bus')!;
@@ -397,7 +400,14 @@ export const ComparePage: React.FC<ComparePageProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {/* CARD 1: CAR / PERSONAL VEHICLE */}
-              <div className="glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group shadow-sm">
+              <div
+                onClick={() => setSelectedModeId('car')}
+                className={`glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group shadow-sm transition-all cursor-pointer ${
+                  selectedModeId === 'car'
+                    ? 'ring-2 ring-primary border-primary bg-surface-container-lowest/90 shadow-md'
+                    : 'border border-surface-container/60 hover:border-primary/50'
+                }`}
+              >
                 <div className="space-y-space-md">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -411,6 +421,15 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                         </p>
                       </div>
                     </div>
+                    {selectedModeId === 'car' ? (
+                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-[11px] font-bold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Selected
+                      </span>
+                    ) : (
+                      <span className="text-[11px] text-outline opacity-0 group-hover:opacity-100 transition-opacity">
+                        View Pie
+                      </span>
+                    )}
                   </div>
 
                   {/* Personal Car Scenic Mountain Pass Image */}
@@ -525,7 +544,14 @@ export const ComparePage: React.FC<ComparePageProps> = ({
               </div>
 
               {/* CARD 2: INTERCITY BUS */}
-              <div className="glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group shadow-sm">
+              <div
+                onClick={() => setSelectedModeId('bus')}
+                className={`glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group shadow-sm transition-all cursor-pointer ${
+                  selectedModeId === 'bus'
+                    ? 'ring-2 ring-primary border-primary bg-surface-container-lowest/90 shadow-md'
+                    : 'border border-surface-container/60 hover:border-primary/50'
+                }`}
+              >
                 <div className="space-y-space-md">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -539,6 +565,11 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                         </p>
                       </div>
                     </div>
+                    {selectedModeId === 'bus' && (
+                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-[11px] font-bold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Selected
+                      </span>
+                    )}
                   </div>
 
                   {/* Authentic AC Sleeper Bus Image */}
@@ -633,8 +664,15 @@ export const ComparePage: React.FC<ComparePageProps> = ({
               </div>
 
               {/* CARD 3: TRAIN (BEST VALUE) */}
-              <div className="glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group border-2 border-tertiary/70 shadow-md">
-                <div className="absolute top-0 right-0 z-10">
+              <div
+                onClick={() => setSelectedModeId('train')}
+                className={`glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group border-2 shadow-md transition-all cursor-pointer ${
+                  selectedModeId === 'train'
+                    ? 'ring-2 ring-tertiary border-tertiary bg-surface-container-lowest/90 shadow-lg'
+                    : 'border-tertiary/70'
+                }`}
+              >
+                <div className="absolute top-0 right-0 z-10 flex items-center">
                   <span className="bg-tertiary text-on-tertiary font-label-sm text-label-sm font-bold px-3 py-1 rounded-bl-xl inline-flex items-center gap-1 shadow-sm uppercase tracking-wider">
                     <span className="material-symbols-outlined text-[13px]">savings</span> Lowest Cost
                   </span>
@@ -653,6 +691,11 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                         </p>
                       </div>
                     </div>
+                    {selectedModeId === 'train' && (
+                      <span className="px-2 py-0.5 rounded-full bg-tertiary/15 text-tertiary font-label-sm text-[11px] font-bold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Selected
+                      </span>
+                    )}
                   </div>
 
                   {/* Train Photo Scenery Anchor - Placed first before pricing for symmetry */}
@@ -745,7 +788,14 @@ export const ComparePage: React.FC<ComparePageProps> = ({
               </div>
 
               {/* CARD 4: FLIGHT (FASTEST) */}
-              <div className="glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group border-2 border-primary/70 shadow-md">
+              <div
+                onClick={() => setSelectedModeId('flight')}
+                className={`glass-card-interactive rounded-2xl flex flex-col justify-between p-space-md relative overflow-hidden group border-2 shadow-md transition-all cursor-pointer ${
+                  selectedModeId === 'flight'
+                    ? 'ring-2 ring-primary border-primary bg-surface-container-lowest/90 shadow-lg'
+                    : 'border-primary/70'
+                }`}
+              >
                 <div className="absolute top-0 right-0 z-10">
                   <span className="bg-primary text-on-primary font-label-sm text-label-sm font-bold px-3 py-1 rounded-bl-xl inline-flex items-center gap-1 shadow-sm uppercase tracking-wider">
                     <span className="material-symbols-outlined text-[13px]">bolt</span> Fastest
@@ -765,6 +815,11 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                         </p>
                       </div>
                     </div>
+                    {selectedModeId === 'flight' && (
+                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-[11px] font-bold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Selected
+                      </span>
+                    )}
                   </div>
 
                   {/* Flight Wing Photo */}
@@ -858,6 +913,20 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                 </div>
               </div>
             </div>
+          </section>
+
+          {/* ========================================== */}
+          {/* 4.5 RECHARTS VISUAL COST PIE BREAKDOWN     */}
+          {/* ========================================== */}
+          <section id="trip-cost-pie-breakdown" className="w-full">
+            <TripCostPieChart
+              inputs={inputs}
+              result={result}
+              viewPerPerson={viewPerPerson}
+              onOpenBreakdown={onOpenBreakdown}
+              selectedModeId={selectedModeId}
+              onSelectModeId={setSelectedModeId}
+            />
           </section>
 
           {/* ========================================== */}
