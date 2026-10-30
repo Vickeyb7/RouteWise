@@ -27,7 +27,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
   const bestMode = result.modes.find(m => m.id === result.cheapestModeId);
 
-  const summaryText = `🚗 RouteWise Trip Plan: ${inputs.origin} ➔ ${inputs.destination}
+  const viaStopsText =
+    inputs.intermediateStops && inputs.intermediateStops.length > 0
+      ? `\n• Via: ${inputs.intermediateStops.map(s => (typeof s === 'string' ? s : s.name)).join(' ➔ ')}${inputs.isRouteOptimized ? ' (Optimized)' : ''}`
+      : '';
+
+  const summaryText = `🚗 RouteWise Trip Plan: ${inputs.origin} ➔ ${inputs.destination}${viaStopsText}
 • Total Distance: ${result.totalDistanceKm} km (${inputs.isRoundTrip ? 'Round-trip' : 'One-way'})
 • Passengers: ${inputs.passengers} travellers
 • Personal Car: ${formatINR(result.totalDrivingCost)} total (${formatINR(result.costPerPerson)}/pax)

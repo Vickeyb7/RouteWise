@@ -2,7 +2,15 @@
  * RouteWise Calculation Engine Regression & Verification Tests
  */
 
-import { calculateTripCosts, sanitizeInputs, formatINR, formatDuration } from './tripCalculations.ts';
+import {
+  calculateTripCosts,
+  sanitizeInputs,
+  formatINR,
+  formatDuration,
+  normalizeIntermediateStops,
+  reorderIntermediateStops,
+  calculateTimeEfficientRouteSequence,
+} from './tripCalculations.ts';
 import { TripInputs, VehicleProfile } from '../types/index.ts';
 
 function assert(condition: boolean, message: string) {
@@ -118,5 +126,32 @@ assert(safe.fuelPrice === 105, 'Negative fuel price sanitized to fallback 105');
 // Test 8: Formatters
 assert(formatINR(4450) === '₹4,450', 'formatINR formats ₹4,450 properly');
 assert(formatDuration(570) === '9 h 30 min', 'formatDuration formats 570 mins as 9 h 30 min');
+
+// Intermediate Stops & Dynamic Reordering Tests
+const testStops = ['Satara', 'Kolhapur', 'Belgaum'];
+const normalized = normalizeIntermediateStops(testStops);
+assert(normalized.length === 3, 'normalizeIntermediateStops correctly normalizes 3 string stops');
+assert(normalized[0].name === 'Satara', 'First stop name is Satara');
+assert(normalized[1].name === 'Kolhapur', 'Second stop name is Kolhapur');
+assert(normalized[2].name === 'Belgaum', 'Third stop name is Belgaum');
+
+// Test reordering: move Satara (index 0) to end (index 2)
+const reordered = reorderIntermediateStops(normalized, 0, 2);
+assert(reordered[0].name === 'Kolhapur', 'After reorder, index 0 is Kolhapur');
+assert(reordered[1].name === 'Belgaum', 'After reorder, index 1 is Belgaum');
+assert(reordered[2].name === 'Satara', 'After reorder, index 2 is Satara');
+
+// Route Sequence Optimization Test
+// Intentionally reverse geographic corridor: Belgaum is further south than Satara, so [Belgaum, Satara, Kolhapur] causes major back-and-forth zigzagging!
+const zigzagStops = ['Belgaum', 'Satara', 'Kolhapur'];
+const optimizationResult = calculateTimeEfficientRouteSequence('Pune', zigzagStops, 'Goa');
+
+assert(optimizationResult.isReordered === true, 'Suboptimal zigzag sequence is detected and reordered');
+assert(optimizationResult.timeSavedMinutes > 0, `Time saved is positive (${optimizationResult.timeSavedMinutes} mins saved)`);
+assert(optimizationResult.distanceSavedKm > 0, `Distance saved is positive (${optimizationResult.distanceSavedKm} km saved)`);
+assert(optimizationResult.optimizedSequence[0].name === 'Satara', 'First optimized stop along Pune-Goa corridor is Satara');
+assert(optimizationResult.optimizedSequence[1].name === 'Kolhapur', 'Second optimized stop is Kolhapur');
+assert(optimizationResult.optimizedSequence[2].name === 'Belgaum', 'Third optimized stop is Belgaum');
+assert(optimizationResult.legs.length === 4, 'Route produces 4 discrete legs (Pune->Satara->Kolhapur->Belgaum->Goa)');
 
 console.log('--- ALL REGRESSION TESTS PASSED SUCCESSFULLY! ---');

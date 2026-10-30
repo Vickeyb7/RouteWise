@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { TripInputs, TripCalculationResult, TransportModeEstimate } from '../types/index.ts';
-import { formatINR } from '../lib/tripCalculations.ts';
+import { formatINR, resolveLocationCoordinates } from '../lib/tripCalculations.ts';
 import { TripCostPieChart } from '../components/TripCostPieChart.tsx';
+import { RouteMap } from '../components/RouteMap.tsx';
+import { WeatherForecastWidget } from '../components/WeatherForecastWidget.tsx';
 
 interface ComparePageProps {
   inputs: TripInputs;
@@ -32,6 +34,16 @@ export const ComparePage: React.FC<ComparePageProps> = ({
   const [showFormulas, setShowFormulas] = useState(false);
   // Selected mode for deep-dive pie chart breakdown (defaulting to personal car road trip)
   const [selectedModeId, setSelectedModeId] = useState<string>('car');
+  // Geospatial telemetry card view ('map' | 'elevation')
+  const [geospatialTab, setGeospatialTab] = useState<'map' | 'elevation'>('map');
+  // Top banner interactive map toggle
+  const [showTopRouteMap, setShowTopRouteMap] = useState<boolean>(false);
+
+  // Destination coordinates for weather and geospatial telemetry
+  const destCoords = useMemo(
+    () => resolveLocationCoordinates(inputs.destination || 'Goa, India'),
+    [inputs.destination]
+  );
 
   const carMode = result.modes.find(m => m.id === 'car')!;
   const busMode = result.modes.find(m => m.id === 'bus')!;
@@ -125,6 +137,18 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                 <span>{result.totalDistanceKm} km driving baseline</span>
                 <span>•</span>
                 <span>Vehicle: {inputs.vehicle.name}</span>
+                {inputs.intermediateStops && inputs.intermediateStops.length > 0 && (
+                  <>
+                    <span>•</span>
+                    <span className="inline-flex items-center gap-1 text-primary font-medium">
+                      <span className="material-symbols-outlined text-[14px]">alt_route</span>
+                      <span>
+                        Via {inputs.intermediateStops.map(s => (typeof s === 'string' ? s : s.name)).join(' ➔ ')}
+                        {inputs.isRouteOptimized && ' (⚡ Optimized)'}
+                      </span>
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -165,27 +189,78 @@ export const ComparePage: React.FC<ComparePageProps> = ({
             </div>
           </section>
 
-          {/* Western Ghats Scenery Preview Banner */}
-          <div className="relative w-full h-28 sm:h-36 rounded-2xl overflow-hidden shadow-sm border border-surface-container">
-            <img
-              src="/assets/aistudio/screen_5350671f.png"
-              alt="Panoramic scenic Western Ghats misty winding mountain road"
-              className="w-full h-full object-cover object-center"
-              onError={e => {
-                // Fallback to online CDN if local asset preview is unavailable
-                e.currentTarget.src =
-                  'https://lh3.googleusercontent.com/aida-public/AB6AXuDT9wxL74Ar4vKw4P5mId0ZigbYgGmddNDPxB6n_FxzGtbh6BZ-tpR4P0xGMmFZTY7biCmL8UUuexy2_C2YMQM_A8cjYjGUfV32Dg60xPbtJtgUVHKto2dpUHhXK91TmPQL5UEeacNLeV9PNDDjAuATMi_xsOhcNpo6sDdRGb6HzHIgKYQ2g0PEddDCdGNrUKuF4vjxABTzCHxEoN-MGq4HzztIshVu6DZgZwLnRI5cOrEm8_S0g9d5Dg';
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/85 via-inverse-surface/30 to-transparent flex items-end justify-between p-3.5">
-              <span className="font-label-sm text-label-sm text-surface-bright flex items-center gap-1.5 font-medium">
-                <span className="material-symbols-outlined text-[16px] text-tertiary-fixed">landscape</span>
-                <span>Anmod Pass • 712m Peak Elevation • NH48 Corridor</span>
-              </span>
-              <span className="font-label-sm text-label-sm bg-surface-container-lowest/90 backdrop-blur-md text-on-surface px-2.5 py-0.5 rounded-full font-semibold shadow-sm">
-                Dry Road • Normal Traffic Flow
-              </span>
+          {/* Western Ghats Scenery Preview Banner & Live Route Map */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs px-1">
+              <span className="text-secondary font-medium">Corridor Navigation Preview</span>
+              <div className="inline-flex p-0.5 rounded-lg bg-surface-container-low border border-surface-container">
+                <button
+                  type="button"
+                  onClick={() => setShowTopRouteMap(false)}
+                  className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${
+                    !showTopRouteMap
+                      ? 'bg-surface-container-lowest text-primary shadow-xs font-bold'
+                      : 'text-secondary hover:text-on-surface'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[13px]">image</span>
+                  <span>Scenic Corridor</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowTopRouteMap(true)}
+                  className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${
+                    showTopRouteMap
+                      ? 'bg-surface-container-lowest text-primary shadow-xs font-bold'
+                      : 'text-secondary hover:text-on-surface'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[13px]">map</span>
+                  <span>Live Route Map</span>
+                </button>
+              </div>
             </div>
+
+            {showTopRouteMap ? (
+              <RouteMap
+                inputs={inputs}
+                tollPlazas={result.tollPlazas}
+                totalDistanceKm={result.totalDistanceKm}
+                estimatedDurationMinutes={carMode.doorToDoorMinutes}
+                height="320px"
+              />
+            ) : (
+              <div className="relative w-full h-28 sm:h-36 rounded-2xl overflow-hidden shadow-sm border border-surface-container group">
+                <img
+                  src="/assets/aistudio/screen_5350671f.png"
+                  alt="Panoramic scenic Western Ghats misty winding mountain road"
+                  className="w-full h-full object-cover object-center"
+                  onError={e => {
+                    e.currentTarget.src =
+                      'https://lh3.googleusercontent.com/aida-public/AB6AXuDT9wxL74Ar4vKw4P5mId0ZigbYgGmddNDPxB6n_FxzGtbh6BZ-tpR4P0xGMmFZTY7biCmL8UUuexy2_C2YMQM_A8cjYjGUfV32Dg60xPbtJtgUVHKto2dpUHhXK91TmPQL5UEeacNLeV9PNDDjAuATMi_xsOhcNpo6sDdRGb6HzHIgKYQ2g0PEddDCdGNrUKuF4vjxABTzCHxEoN-MGq4HzztIshVu6DZgZwLnRI5cOrEm8_S0g9d5Dg';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/85 via-inverse-surface/30 to-transparent flex items-end justify-between p-3.5">
+                  <span className="font-label-sm text-label-sm text-surface-bright flex items-center gap-1.5 font-medium">
+                    <span className="material-symbols-outlined text-[16px] text-tertiary-fixed">landscape</span>
+                    <span>Anmod Pass • 712m Peak Elevation • NH48 Corridor</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowTopRouteMap(true)}
+                      className="font-label-sm text-label-sm bg-primary/90 hover:bg-primary backdrop-blur-md text-white px-2.5 py-0.5 rounded-full font-semibold shadow-sm transition-all flex items-center gap-1"
+                    >
+                      <span className="material-symbols-outlined text-[13px]">explore</span>
+                      <span>Open Live Map</span>
+                    </button>
+                    <span className="hidden sm:inline-block font-label-sm text-label-sm bg-surface-container-lowest/90 backdrop-blur-md text-on-surface px-2.5 py-0.5 rounded-full font-semibold shadow-sm">
+                      Dry Road • Normal Traffic
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ========================================== */}
@@ -825,12 +900,12 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                   {/* Flight Wing Photo */}
                   <div className="relative w-full h-28 rounded-xl overflow-hidden shadow-inner group-hover:scale-[1.01] transition-transform">
                     <img
-                      src="/assets/aistudio/screen_0f0752d3.png"
-                      alt="Airplane wing flying over fluffy golden clouds"
-                      className="w-full h-full object-cover"
+                      src="/assets/aistudio/screen_29c8d11a.png"
+                      alt="Commercial passenger flight cruising above sunset clouds over wing"
+                      className="w-full h-full object-cover object-center"
                       onError={e => {
                         e.currentTarget.src =
-                          'https://lh3.googleusercontent.com/aida-public/AB6AXuC5wVrz45cHOy8o6GAFFvAeIgSJdaFW_HTm4cmyK2vIgMEWY8lAY5McT6lq4uz1zjVYyLtYq-d95Nbv22sskXFJitKWnDH6ZGHTNuMFlZmnit3eM0dVj1QgqGaQE8t6ZDhOM2ICLtKyRK_PTexK8UykTezumpCAZdZKAG5A49oCWozKEQDGebU9OQtOdy3csD9jYakTSH28Z554zh7NbFjKRZwCm3aGuW86WHM9UAYflpDWPtwKz7f6qA';
+                          'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80';
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/90 via-inverse-surface/30 to-transparent flex items-end justify-between p-2.5">
@@ -1088,8 +1163,18 @@ export const ComparePage: React.FC<ComparePageProps> = ({
             </div>
           </section>
 
+          {/* ================================================== */}
+          {/* 6. DESTINATION 5-DAY WEATHER & DRIVING ADVISORY    */}
+          {/* ================================================== */}
+          <section>
+            <WeatherForecastWidget
+              destination={inputs.destination || 'Goa, India'}
+              coordinates={destCoords}
+            />
+          </section>
+
           {/* ========================================== */}
-          {/* 6. TRANSPARENT CALCULATION BREAKDOWN       */}
+          {/* 7. TRANSPARENT CALCULATION BREAKDOWN       */}
           {/* ========================================== */}
           <section className="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-surface-container">
             <button
@@ -1160,51 +1245,94 @@ export const ComparePage: React.FC<ComparePageProps> = ({
           {/* 7. GEOSPATIAL TELEMETRY & RECOMMENDATION   */}
           {/* ========================================== */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-stretch">
-            {/* Elevation Profile Card */}
+            {/* Geospatial Telemetry & Interactive Map Card */}
             <div className="lg:col-span-2 bg-surface-container-lowest rounded-2xl shadow-sm p-space-md space-y-space-md border border-surface-container flex flex-col justify-between">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="space-y-0.5">
                   <span className="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">
                     Geospatial Telemetry
                   </span>
                   <h3 className="font-title-md text-title-md text-on-surface font-bold">
-                    Pune-Goa Corridor Profile & Ghats
+                    {inputs.origin} ➔ {inputs.destination} Corridor
                   </h3>
                 </div>
-                <div className="flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-full text-label-sm font-label-sm text-on-surface-variant font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-tertiary"></span>
-                  <span>NH48 via Nipani-Amboli Pass</span>
+                <div className="flex items-center gap-2">
+                  {/* View Mode Toggle Pill */}
+                  <div className="inline-flex p-0.5 rounded-lg bg-surface-container-low border border-surface-container">
+                    <button
+                      type="button"
+                      onClick={() => setGeospatialTab('map')}
+                      className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${
+                        geospatialTab === 'map'
+                          ? 'bg-primary text-on-primary shadow-xs font-bold'
+                          : 'text-secondary hover:text-on-surface'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[13px]">map</span>
+                      <span>Route Map</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGeospatialTab('elevation')}
+                      className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${
+                        geospatialTab === 'elevation'
+                          ? 'bg-primary text-on-primary shadow-xs font-bold'
+                          : 'text-secondary hover:text-on-surface'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[13px]">terrain</span>
+                      <span>Elevation Profile</span>
+                    </button>
+                  </div>
+
+                  <div className="hidden sm:flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-full text-label-sm font-label-sm text-on-surface-variant font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-tertiary"></span>
+                    <span>NH48 / NH66</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Map & Elevation Sparkline */}
-              <div className="w-full h-44 rounded-xl bg-surface-container relative overflow-hidden shadow-inner border border-surface-container">
-                <img
-                  src="/assets/aistudio/screen_bbc9e229.png"
-                  alt="Satellite topographic elevation map of rugged green mountain range"
-                  className="w-full h-full object-cover"
-                  onError={e => {
-                    e.currentTarget.src =
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuCL7QwGp2kvCFnx5yeGqWSxkli3isYHk5UpH33uuF0lLGZo83X1BHoBoMJCVd5_t2686qYOhSYllh8aAUZ0HTn3-RcV6uJvym_9CUeGrP_MZCm6TFW2yrUIHRAgHpRzqctt89v2wWLQA93Pkaoa-sQcixFXV5GGuK8Mk884g6ip-yElbX_k4yBPY68xv7rhKZEud7WrWUO9rH6jingovKnxgwu1yhkcP5L2Y9HE6xWeER2sTwyQW1OsMQ';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/90 via-inverse-surface/30 to-transparent flex flex-col justify-end p-3">
-                  <div className="flex items-center justify-between text-surface-bright font-label-sm text-label-sm">
-                    <span>Deccan Plateau (560m)</span>
-                    <span className="font-bold text-tertiary-fixed">Peak: 712m (Anmod)</span>
-                    <span>Coastal Plain (14m)</span>
-                  </div>
-                  {/* SVG Elevation Sparkline */}
-                  <svg className="w-full h-7 mt-1 text-primary-fixed stroke-current" fill="none" viewBox="0 0 320 40">
-                    <path
-                      d="M0,25 Q40,24 80,20 T160,5 T220,12 T280,36 L320,38"
-                      strokeLinecap="round"
-                      strokeWidth="2.5"
-                    ></path>
-                    <circle cx="160" cy="5" fill="#315cf5" r="3.5"></circle>
-                  </svg>
+              {/* View 1: Interactive Leaflet Route Map */}
+              {geospatialTab === 'map' ? (
+                <div className="w-full">
+                  <RouteMap
+                    inputs={inputs}
+                    tollPlazas={result.tollPlazas}
+                    totalDistanceKm={result.totalDistanceKm}
+                    estimatedDurationMinutes={carMode.doorToDoorMinutes}
+                    height="320px"
+                  />
                 </div>
-              </div>
+              ) : (
+                /* View 2: Elevation Profile & Sparkline */
+                <div className="w-full h-56 rounded-xl bg-surface-container relative overflow-hidden shadow-inner border border-surface-container">
+                  <img
+                    src="/assets/aistudio/screen_bbc9e229.png"
+                    alt="Satellite topographic elevation map of rugged green mountain range"
+                    className="w-full h-full object-cover"
+                    onError={e => {
+                      e.currentTarget.src =
+                        'https://lh3.googleusercontent.com/aida-public/AB6AXuCL7QwGp2kvCFnx5yeGqWSxkli3isYHk5UpH33uuF0lLGZo83X1BHoBoMJCVd5_t2686qYOhSYllh8aAUZ0HTn3-RcV6uJvym_9CUeGrP_MZCm6TFW2yrUIHRAgHpRzqctt89v2wWLQA93Pkaoa-sQcixFXV5GGuK8Mk884g6ip-yElbX_k4yBPY68xv7rhKZEud7WrWUO9rH6jingovKnxgwu1yhkcP5L2Y9HE6xWeER2sTwyQW1OsMQ';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/90 via-inverse-surface/30 to-transparent flex flex-col justify-end p-3.5">
+                    <div className="flex items-center justify-between text-surface-bright font-label-sm text-label-sm">
+                      <span>Deccan Plateau (560m)</span>
+                      <span className="font-bold text-tertiary-fixed">Peak: 712m (Anmod)</span>
+                      <span>Coastal Plain (14m)</span>
+                    </div>
+                    {/* SVG Elevation Sparkline */}
+                    <svg className="w-full h-8 mt-1 text-primary-fixed stroke-current" fill="none" viewBox="0 0 320 40">
+                      <path
+                        d="M0,25 Q40,24 80,20 T160,5 T220,12 T280,36 L320,38"
+                        strokeLinecap="round"
+                        strokeWidth="2.5"
+                      ></path>
+                      <circle cx="160" cy="5" fill="#315cf5" r="3.5"></circle>
+                    </svg>
+                  </div>
+                </div>
+              )}
 
               {/* Metric Triplets */}
               <div className="grid grid-cols-3 gap-2 pt-1 text-center">
@@ -1214,7 +1342,9 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                 </div>
                 <div className="bg-surface-container-low p-2 rounded-xl">
                   <span className="font-label-sm text-label-sm text-secondary block">Toll Plazas</span>
-                  <span className="font-numeric-data-md text-numeric-data-md text-on-surface font-bold">4 Plazas</span>
+                  <span className="font-numeric-data-md text-numeric-data-md text-on-surface font-bold">
+                    {result.tollPlazas?.length || 4} Plazas
+                  </span>
                 </div>
                 <div className="bg-surface-container-low p-2 rounded-xl">
                   <span className="font-label-sm text-label-sm text-secondary block">Avg Ghat Speed</span>

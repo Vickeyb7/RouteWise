@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { TripInputs, VehicleProfile, SavedTrip, TransportModeEstimate, UserProfile } from './types/index.ts';
 import { DEFAULT_VEHICLES } from './data/demoData.ts';
-import { calculateTripCosts } from './lib/tripCalculations.ts';
+import { calculateTripCosts, normalizeIntermediateStops } from './lib/tripCalculations.ts';
 import {
   loadSavedTrips,
   saveTrip,
@@ -74,7 +74,12 @@ export default function App() {
   // 3. Core Trip Inputs
   const [inputs, setInputs] = useState<TripInputs>(() => {
     const draft = loadCurrentTripDraft();
-    if (draft) return draft;
+    if (draft) {
+      return {
+        ...draft,
+        intermediateStops: normalizeIntermediateStops(draft.intermediateStops),
+      };
+    }
 
     // Standard benchmark default: Pune -> Goa, 2 pax, Petrol Sedan
     return {

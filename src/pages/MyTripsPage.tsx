@@ -237,6 +237,14 @@ export const MyTripsPage: React.FC<MyTripsPageProps> = ({
                         <p className="font-body-sm text-body-sm text-secondary">
                           {trip.inputs.origin} ➔ {trip.inputs.destination} ({trip.inputs.isRoundTrip ? 'Round-trip' : 'One-way'})
                         </p>
+                        {trip.inputs.intermediateStops && trip.inputs.intermediateStops.length > 0 && (
+                          <div className="text-[11px] text-primary flex items-center gap-1 font-medium truncate mt-0.5">
+                            <span className="material-symbols-outlined text-[13px]">alt_route</span>
+                            <span className="truncate">
+                              Via {trip.inputs.intermediateStops.map(s => (typeof s === 'string' ? s : s.name)).join(' ➔ ')}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Summary Specs */}

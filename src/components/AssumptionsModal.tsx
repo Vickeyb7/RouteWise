@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { TripInputs, VehicleProfile } from '../types/index.ts';
+import { TripInputs, VehicleProfile, IntermediateStop } from '../types/index.ts';
 import { DEFAULT_VEHICLES } from '../data/demoData.ts';
 import { loadSavedVehicles } from '../lib/storage.ts';
+import {
+  normalizeIntermediateStops,
+  reorderIntermediateStops,
+  calculateTimeEfficientRouteSequence,
+  formatDuration,
+} from '../lib/tripCalculations.ts';
 
 interface AssumptionsModalProps {
   isOpen: boolean;
@@ -32,20 +38,61 @@ export const AssumptionsModal: React.FC<AssumptionsModalProps> = ({
     }
   };
 
+  const [optimizationNotice, setOptimizationNotice] = useState<string | null>(null);
+
   const handleAddStop = () => {
     if (!newStop.trim()) return;
+    const stopObj: IntermediateStop = {
+      id: `stop-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: newStop.trim(),
+      stopDurationMinutes: 30,
+    };
     setFormState(prev => ({
       ...prev,
-      intermediateStops: [...prev.intermediateStops, newStop.trim()],
+      intermediateStops: [...prev.intermediateStops, stopObj],
+      isRouteOptimized: false,
     }));
     setNewStop('');
+    setOptimizationNotice(null);
   };
 
   const handleRemoveStop = (idx: number) => {
     setFormState(prev => ({
       ...prev,
       intermediateStops: prev.intermediateStops.filter((_, i) => i !== idx),
+      isRouteOptimized: false,
     }));
+    setOptimizationNotice(null);
+  };
+
+  const handleMoveStop = (fromIdx: number, toIdx: number) => {
+    setFormState(prev => ({
+      ...prev,
+      intermediateStops: reorderIntermediateStops(prev.intermediateStops, fromIdx, toIdx),
+      isRouteOptimized: false,
+    }));
+    setOptimizationNotice(null);
+  };
+
+  const handleOptimizeSequence = () => {
+    if (formState.intermediateStops.length < 2) return;
+    const result = calculateTimeEfficientRouteSequence(
+      formState.origin,
+      formState.intermediateStops,
+      formState.destination
+    );
+    setFormState(prev => ({
+      ...prev,
+      intermediateStops: result.optimizedSequence,
+      isRouteOptimized: true,
+    }));
+    if (result.isReordered && (result.timeSavedMinutes > 0 || result.distanceSavedKm > 0)) {
+      setOptimizationNotice(
+        `Optimized! Saved ${result.distanceSavedKm} km & ${formatDuration(result.timeSavedMinutes)}.`
+      );
+    } else {
+      setOptimizationNotice('Current order is already the fastest route!');
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -280,22 +327,69 @@ export const AssumptionsModal: React.FC<AssumptionsModalProps> = ({
                 </button>
               </div>
 
+              {/* Optimization Action and Notice */}
+              {formState.intermediateStops.length >= 2 && (
+                <div className="flex items-center justify-between gap-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={handleOptimizeSequence}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold hover:bg-tertiary-fixed-dim transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">bolt</span>
+                    <span>⚡ Optimize Route Sequence</span>
+                  </button>
+                  {optimizationNotice && (
+                    <span className="text-xs text-tertiary font-medium">{optimizationNotice}</span>
+                  )}
+                </div>
+              )}
+
               {formState.intermediateStops.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {formState.intermediateStops.map((stop, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm"
+                <div className="space-y-1.5 mt-2">
+                  <div className="text-[11px] text-secondary flex justify-between">
+                    <span>Route Waypoint Order</span>
+                    <span>Use ↑ ↓ to reorder</span>
+                  </div>
+                  {normalizeIntermediateStops(formState.intermediateStops).map((stop, i, arr) => (
+                    <div
+                      key={stop.id || i}
+                      className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-surface-container text-on-surface font-label-sm border border-surface-container-highest/60"
                     >
-                      <span>{stop}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveStop(i)}
-                        className="hover:text-error text-outline"
-                      >
-                        ×
-                      </button>
-                    </span>
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <span className="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center shrink-0">
+                          {i + 1}
+                        </span>
+                        <span className="truncate font-medium">{stop.name}</span>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleMoveStop(i, i - 1)}
+                          disabled={i === 0}
+                          className="w-5 h-5 rounded bg-surface-container-high hover:bg-surface-variant disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-xs"
+                          title="Move stop earlier"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleMoveStop(i, i + 1)}
+                          disabled={i === arr.length - 1}
+                          className="w-5 h-5 rounded bg-surface-container-high hover:bg-surface-variant disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-xs"
+                          title="Move stop later"
+                        >
+                          ↓
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveStop(i)}
+                          className="w-5 h-5 rounded hover:bg-error-container hover:text-error text-secondary flex items-center justify-center text-sm ml-1"
+                          title="Remove stop"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}

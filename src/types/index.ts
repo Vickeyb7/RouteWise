@@ -89,6 +89,42 @@ export interface CorridorRoute {
   };
 }
 
+export interface IntermediateStop {
+  id: string;
+  name: string;
+  city?: string;
+  lat?: number;
+  lng?: number;
+  stopDurationMinutes?: number;
+  notes?: string;
+}
+
+export type IntermediateStopItem = string | IntermediateStop;
+
+export interface RouteLeg {
+  from: string;
+  to: string;
+  distanceKm: number;
+  travelTimeMinutes: number;
+  speedKmh: number;
+}
+
+export interface OptimizedRouteSequenceResult {
+  origin: string;
+  destination: string;
+  originalSequence: IntermediateStop[];
+  optimizedSequence: IntermediateStop[];
+  totalDistanceKm: number;
+  totalTransitTimeMinutes: number;
+  totalDurationWithStopsMinutes: number;
+  originalDistanceKm: number;
+  originalTransitTimeMinutes: number;
+  distanceSavedKm: number;
+  timeSavedMinutes: number;
+  isReordered: boolean;
+  legs: RouteLeg[];
+}
+
 export interface TripInputs {
   origin: string;
   destination: string;
@@ -96,11 +132,12 @@ export interface TripInputs {
   returnDate?: string;
   isRoundTrip: boolean;
   passengers: number;
-  intermediateStops: string[];
+  intermediateStops: (string | IntermediateStop)[];
   vehicle: VehicleProfile;
   expenses: TripExpenses;
   customTolls?: number;
   useManualToll: boolean;
+  isRouteOptimized?: boolean;
 }
 
 export interface ModeExpenseComposition {

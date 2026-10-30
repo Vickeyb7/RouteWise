@@ -9,6 +9,9 @@ import {
   TransportModeEstimate,
   StateFuelSegment,
   CorridorRoute,
+  IntermediateStop,
+  RouteLeg,
+  OptimizedRouteSequenceResult,
 } from '../types/index.ts';
 import { POPULAR_CORRIDORS } from '../data/demoData.ts';
 
@@ -522,3 +525,429 @@ export function calculateTripCosts(inputs: TripInputs): TripCalculationResult {
     warnings,
   };
 }
+
+/**
+ * Normalizes an intermediate stop input (string or object) into a canonical IntermediateStop object.
+ */
+export function normalizeIntermediateStop(
+  stop: string | IntermediateStop,
+  index: number = 0
+): IntermediateStop {
+  if (typeof stop === 'string') {
+    const trimmed = stop.trim();
+    return {
+      id: `stop-${index}-${trimmed.toLowerCase().replace(/[^a-z0-9]/g, '') || index}`,
+      name: trimmed,
+      stopDurationMinutes: 30,
+    };
+  }
+  return {
+    ...stop,
+    id: stop.id || `stop-${index}-${stop.name.toLowerCase().replace(/[^a-z0-9]/g, '') || index}`,
+    name: stop.name || `Waypoint ${index + 1}`,
+    stopDurationMinutes: stop.stopDurationMinutes ?? 30,
+  };
+}
+
+/**
+ * Normalizes an array of intermediate stops (mix of strings and objects)
+ */
+export function normalizeIntermediateStops(
+  stops: (string | IntermediateStop)[] | undefined
+): IntermediateStop[] {
+  if (!Array.isArray(stops)) return [];
+  return stops.map((s, idx) => normalizeIntermediateStop(s, idx));
+}
+
+/**
+ * Dynamically reorders intermediate stops by moving an item from one index to another.
+ */
+export function reorderIntermediateStops(
+  stops: (string | IntermediateStop)[],
+  fromIndex: number,
+  toIndex: number
+): IntermediateStop[] {
+  const normalized = normalizeIntermediateStops(stops);
+  if (
+    fromIndex < 0 ||
+    fromIndex >= normalized.length ||
+    toIndex < 0 ||
+    toIndex >= normalized.length ||
+    fromIndex === toIndex
+  ) {
+    return normalized;
+  }
+  const result = [...normalized];
+  const [removed] = result.splice(fromIndex, 1);
+  result.splice(toIndex, 0, removed);
+  return result;
+}
+
+/**
+ * Database of coordinates for common transit hubs, cities, and popular waypoints across Indian corridors.
+ */
+export const KNOWN_TRANSIT_COORDINATES: Record<string, { lat: number; lng: number }> = {
+  // Maharashtra & Goa corridor (NH48 / NH66 / AH47)
+  pune: { lat: 18.5204, lng: 73.8567 },
+  'pune, mh': { lat: 18.5204, lng: 73.8567 },
+  'pune, maharashtra': { lat: 18.5204, lng: 73.8567 },
+  satara: { lat: 17.6805, lng: 74.0183 },
+  karad: { lat: 17.2891, lng: 74.1814 },
+  kolhapur: { lat: 16.705, lng: 74.2433 },
+  belgaum: { lat: 15.8497, lng: 74.4977 },
+  belagavi: { lat: 15.8497, lng: 74.4977 },
+  anmod: { lat: 15.4373, lng: 74.3724 },
+  goa: { lat: 15.4909, lng: 73.8278 },
+  'goa, ga': { lat: 15.4909, lng: 73.8278 },
+  'goa, india': { lat: 15.4909, lng: 73.8278 },
+  panaji: { lat: 15.4909, lng: 73.8278 },
+  madgaon: { lat: 15.2832, lng: 73.9862 },
+  margao: { lat: 15.2832, lng: 73.9862 },
+  vasco: { lat: 15.3995, lng: 73.8124 },
+  mapusa: { lat: 15.5937, lng: 73.8142 },
+
+  // Mumbai - Pune corridor
+  mumbai: { lat: 19.076, lng: 72.8777 },
+  'mumbai, maharashtra': { lat: 19.076, lng: 72.8777 },
+  navi_mumbai: { lat: 19.033, lng: 73.0297 },
+  lonavala: { lat: 18.7557, lng: 73.4091 },
+  khandala: { lat: 18.7614, lng: 73.3768 },
+  panvel: { lat: 18.9894, lng: 73.1175 },
+  mahabaleshwar: { lat: 17.9237, lng: 73.6586 },
+  panchgani: { lat: 17.9234, lng: 73.8016 },
+  nashik: { lat: 19.9975, lng: 73.7898 },
+  shirdi: { lat: 19.7645, lng: 74.4762 },
+  aurangabad: { lat: 19.8762, lng: 75.3433 },
+  chhatrapati_sambhajinagar: { lat: 19.8762, lng: 75.3433 },
+
+  // Delhi - Jaipur - NCR corridor
+  delhi: { lat: 28.7041, lng: 77.1025 },
+  'delhi, ncr': { lat: 28.7041, lng: 77.1025 },
+  'new delhi': { lat: 28.6139, lng: 77.209 },
+  gurugram: { lat: 28.4595, lng: 77.0266 },
+  gurgaon: { lat: 28.4595, lng: 77.0266 },
+  neemrana: { lat: 27.9893, lng: 76.3861 },
+  kotputli: { lat: 27.7032, lng: 76.2001 },
+  shahpura: { lat: 27.3878, lng: 75.9592 },
+  jaipur: { lat: 26.9124, lng: 75.7873 },
+  'jaipur, rajasthan': { lat: 26.9124, lng: 75.7873 },
+  agra: { lat: 27.1767, lng: 78.0081 },
+  mathura: { lat: 27.4924, lng: 77.6737 },
+
+  // Bengaluru - Chennai - South corridor
+  bengaluru: { lat: 12.9716, lng: 77.5946 },
+  'bengaluru, karnataka': { lat: 12.9716, lng: 77.5946 },
+  bangalore: { lat: 12.9716, lng: 77.5946 },
+  hosur: { lat: 12.7409, lng: 77.8253 },
+  krishnagiri: { lat: 12.5186, lng: 78.2137 },
+  vellore: { lat: 12.9165, lng: 79.1325 },
+  kanchipuram: { lat: 12.8342, lng: 79.7036 },
+  sriperumbudur: { lat: 12.9692, lng: 79.9452 },
+  chennai: { lat: 13.0827, lng: 80.2707 },
+  'chennai, tamil nadu': { lat: 13.0827, lng: 80.2707 },
+  mysuru: { lat: 12.2958, lng: 76.6394 },
+  mysore: { lat: 12.2958, lng: 76.6394 },
+  coorg: { lat: 12.3375, lng: 75.8069 },
+  hyderabad: { lat: 17.385, lng: 78.4867 },
+  ahmedabad: { lat: 23.0225, lng: 72.5714 },
+  surat: { lat: 21.1702, lng: 72.8311 },
+  vadodara: { lat: 22.3072, lng: 73.1812 },
+};
+
+/**
+ * Resolves approximate geographical coordinates from a place name or stop object.
+ */
+export function resolveLocationCoordinates(
+  nameOrStop: string | IntermediateStop
+): { lat: number; lng: number } {
+  if (typeof nameOrStop === 'object' && nameOrStop.lat !== undefined && nameOrStop.lng !== undefined) {
+    return { lat: nameOrStop.lat, lng: nameOrStop.lng };
+  }
+
+  const rawName = typeof nameOrStop === 'string' ? nameOrStop : nameOrStop.name;
+  const normalized = rawName.toLowerCase().trim().replace(/[.,]/g, '');
+
+  // Exact match
+  if (KNOWN_TRANSIT_COORDINATES[normalized]) {
+    return KNOWN_TRANSIT_COORDINATES[normalized];
+  }
+
+  // Substring match
+  const matchKey = Object.keys(KNOWN_TRANSIT_COORDINATES).find(
+    k => normalized.includes(k) || k.includes(normalized)
+  );
+  if (matchKey) {
+    return KNOWN_TRANSIT_COORDINATES[matchKey];
+  }
+
+  // Deterministic pseudo-coordinates based on string hash for unknown locations
+  let hash = 0;
+  for (let i = 0; i < rawName.length; i++) {
+    hash = (hash << 5) - hash + rawName.charCodeAt(i);
+    hash |= 0;
+  }
+  const latSpread = 15.0 + Math.abs(hash % 12000) / 1000; // Between 15°N and 27°N
+  const lngSpread = 73.0 + Math.abs((hash >> 4) % 9000) / 1000; // Between 73°E and 82°E
+  return { lat: latSpread, lng: lngSpread };
+}
+
+/**
+ * Haversine distance between two coordinates in kilometers, multiplied by a highway winding factor
+ * (typically 1.25x - 1.35x for Indian national highways / expressway detours).
+ */
+export function calculatePointDistanceKm(
+  p1: { lat: number; lng: number },
+  p2: { lat: number; lng: number },
+  highwayWindingFactor: number = 1.28
+): number {
+  const R = 6371; // Earth radius in km
+  const dLat = ((p2.lat - p1.lat) * Math.PI) / 180;
+  const dLon = ((p2.lng - p1.lng) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((p1.lat * Math.PI) / 180) *
+      Math.cos((p2.lat * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const straightLine = R * c;
+
+  if (straightLine < 1) return 5; // Minimal city hop
+  return Math.round(straightLine * highwayWindingFactor * 10) / 10;
+}
+
+/**
+ * Helper to compute distance and travel time for a single route leg.
+ */
+function calculateRouteLeg(
+  fromName: string,
+  toName: string,
+  fromCoords: { lat: number; lng: number },
+  toCoords: { lat: number; lng: number },
+  averageSpeedKmh: number = 55
+): RouteLeg {
+  const dist = calculatePointDistanceKm(fromCoords, toCoords);
+  const transitHours = dist / Math.max(20, averageSpeedKmh);
+  const travelTimeMinutes = Math.max(5, Math.round(transitHours * 60));
+
+  return {
+    from: fromName,
+    to: toName,
+    distanceKm: dist,
+    travelTimeMinutes,
+    speedKmh: averageSpeedKmh,
+  };
+}
+
+/**
+ * Evaluates the full journey cost (distance & time) for a given sequence of stops:
+ * Origin -> Stop[0] -> Stop[1] -> ... -> Stop[n-1] -> Destination
+ */
+function evaluateRouteSequence(
+  originName: string,
+  originCoords: { lat: number; lng: number },
+  stops: IntermediateStop[],
+  destName: string,
+  destCoords: { lat: number; lng: number },
+  averageSpeedKmh: number = 55
+): {
+  totalDistanceKm: number;
+  totalTransitTimeMinutes: number;
+  totalDurationWithStopsMinutes: number;
+  legs: RouteLeg[];
+} {
+  const legs: RouteLeg[] = [];
+  let totalDistanceKm = 0;
+  let totalTransitTimeMinutes = 0;
+  let totalStopDwellMinutes = 0;
+
+  let currentName = originName;
+  let currentCoords = originCoords;
+
+  for (const stop of stops) {
+    const stopCoords = resolveLocationCoordinates(stop);
+    const leg = calculateRouteLeg(currentName, stop.name, currentCoords, stopCoords, averageSpeedKmh);
+    legs.push(leg);
+    totalDistanceKm += leg.distanceKm;
+    totalTransitTimeMinutes += leg.travelTimeMinutes;
+    totalStopDwellMinutes += stop.stopDurationMinutes || 30;
+
+    currentName = stop.name;
+    currentCoords = stopCoords;
+  }
+
+  // Final leg to destination
+  const finalLeg = calculateRouteLeg(currentName, destName, currentCoords, destCoords, averageSpeedKmh);
+  legs.push(finalLeg);
+  totalDistanceKm += finalLeg.distanceKm;
+  totalTransitTimeMinutes += finalLeg.travelTimeMinutes;
+
+  return {
+    totalDistanceKm: Math.round(totalDistanceKm * 10) / 10,
+    totalTransitTimeMinutes,
+    totalDurationWithStopsMinutes: totalTransitTimeMinutes + totalStopDwellMinutes,
+    legs,
+  };
+}
+
+/**
+ * Calculates the most time-efficient route sequence (TSP solver with fixed endpoints).
+ * Minimizes total driving transit time and road distance starting at Origin,
+ * visiting all intermediate stops, and terminating at Destination.
+ *
+ * For <= 8 stops: Exact exhaustive permutation evaluation.
+ * For > 8 stops: Fast 2-opt heuristic optimization.
+ */
+export function calculateTimeEfficientRouteSequence(
+  origin: string,
+  intermediateStops: (string | IntermediateStop)[],
+  destination: string,
+  options?: {
+    averageSpeedKmh?: number;
+    defaultStopDurationMinutes?: number;
+  }
+): OptimizedRouteSequenceResult {
+  const originName = origin.trim() || 'Origin';
+  const destName = destination.trim() || 'Destination';
+  const avgSpeed = options?.averageSpeedKmh ?? 58; // 58 km/h typical average on Indian highways
+  const stops = normalizeIntermediateStops(intermediateStops);
+
+  const originCoords = resolveLocationCoordinates(originName);
+  const destCoords = resolveLocationCoordinates(destName);
+
+  // 1. Evaluate original (user-entered) sequence baseline
+  const originalEvaluation = evaluateRouteSequence(
+    originName,
+    originCoords,
+    stops,
+    destName,
+    destCoords,
+    avgSpeed
+  );
+
+  // If 0 or 1 stops, ordering is already trivial
+  if (stops.length <= 1) {
+    return {
+      origin: originName,
+      destination: destName,
+      originalSequence: [...stops],
+      optimizedSequence: [...stops],
+      totalDistanceKm: originalEvaluation.totalDistanceKm,
+      totalTransitTimeMinutes: originalEvaluation.totalTransitTimeMinutes,
+      totalDurationWithStopsMinutes: originalEvaluation.totalDurationWithStopsMinutes,
+      originalDistanceKm: originalEvaluation.totalDistanceKm,
+      originalTransitTimeMinutes: originalEvaluation.totalTransitTimeMinutes,
+      distanceSavedKm: 0,
+      timeSavedMinutes: 0,
+      isReordered: false,
+      legs: originalEvaluation.legs,
+    };
+  }
+
+  let bestSequence: IntermediateStop[] = [...stops];
+  let bestTransitTime = originalEvaluation.totalTransitTimeMinutes;
+  let bestDistance = originalEvaluation.totalDistanceKm;
+  let bestEvaluation = originalEvaluation;
+
+  // Exact TSP Permutations for small stop counts (<= 8 stops)
+  if (stops.length <= 8) {
+    const generatePermutations = (arr: IntermediateStop[]): IntermediateStop[][] => {
+      if (arr.length <= 1) return [arr];
+      const permutations: IntermediateStop[][] = [];
+      for (let i = 0; i < arr.length; i++) {
+        const current = arr[i];
+        const remaining = arr.slice(0, i).concat(arr.slice(i + 1));
+        const subPerms = generatePermutations(remaining);
+        for (const sub of subPerms) {
+          permutations.push([current, ...sub]);
+        }
+      }
+      return permutations;
+    };
+
+    const allPermutations = generatePermutations(stops);
+    for (const perm of allPermutations) {
+      const evaluation = evaluateRouteSequence(
+        originName,
+        originCoords,
+        perm,
+        destName,
+        destCoords,
+        avgSpeed
+      );
+
+      // We optimize primarily for minimum transit time (and secondary for distance)
+      if (
+        evaluation.totalTransitTimeMinutes < bestTransitTime ||
+        (evaluation.totalTransitTimeMinutes === bestTransitTime && evaluation.totalDistanceKm < bestDistance)
+      ) {
+        bestTransitTime = evaluation.totalTransitTimeMinutes;
+        bestDistance = evaluation.totalDistanceKm;
+        bestSequence = perm;
+        bestEvaluation = evaluation;
+      }
+    }
+  } else {
+    // 2-Opt heuristic for larger lists of stops
+    let improved = true;
+    let currentSeq = [...stops];
+    let currentEval = originalEvaluation;
+
+    while (improved) {
+      improved = false;
+      for (let i = 0; i < currentSeq.length - 1; i++) {
+        for (let k = i + 1; k < currentSeq.length; k++) {
+          // Reverse sub-sequence between i and k
+          const candidateSeq = [
+            ...currentSeq.slice(0, i),
+            ...currentSeq.slice(i, k + 1).reverse(),
+            ...currentSeq.slice(k + 1),
+          ];
+
+          const candidateEval = evaluateRouteSequence(
+            originName,
+            originCoords,
+            candidateSeq,
+            destName,
+            destCoords,
+            avgSpeed
+          );
+
+          if (candidateEval.totalTransitTimeMinutes < currentEval.totalTransitTimeMinutes) {
+            currentSeq = candidateSeq;
+            currentEval = candidateEval;
+            improved = true;
+            break;
+          }
+        }
+        if (improved) break;
+      }
+    }
+    bestSequence = currentSeq;
+    bestEvaluation = currentEval;
+  }
+
+  // Check if sequence actually changed
+  const isReordered =
+    bestSequence.some((stop, idx) => stop.id !== stops[idx]?.id || stop.name !== stops[idx]?.name);
+
+  const timeSavedMinutes = Math.max(0, originalEvaluation.totalTransitTimeMinutes - bestEvaluation.totalTransitTimeMinutes);
+  const distanceSavedKm = Math.max(0, Math.round((originalEvaluation.totalDistanceKm - bestEvaluation.totalDistanceKm) * 10) / 10);
+
+  return {
+    origin: originName,
+    destination: destName,
+    originalSequence: [...stops],
+    optimizedSequence: bestSequence,
+    totalDistanceKm: bestEvaluation.totalDistanceKm,
+    totalTransitTimeMinutes: bestEvaluation.totalTransitTimeMinutes,
+    totalDurationWithStopsMinutes: bestEvaluation.totalDurationWithStopsMinutes,
+    originalDistanceKm: originalEvaluation.totalDistanceKm,
+    originalTransitTimeMinutes: originalEvaluation.totalTransitTimeMinutes,
+    distanceSavedKm,
+    timeSavedMinutes,
+    isReordered,
+    legs: bestEvaluation.legs,
+  };
+}
+

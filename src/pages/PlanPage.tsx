@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
-import { TripInputs, VehicleProfile, CorridorRoute } from '../types/index.ts';
+import { TripInputs, VehicleProfile, CorridorRoute, IntermediateStop } from '../types/index.ts';
 import { POPULAR_CORRIDORS } from '../data/demoData.ts';
+import {
+  normalizeIntermediateStops,
+  reorderIntermediateStops,
+  calculateTimeEfficientRouteSequence,
+  formatDuration,
+} from '../lib/tripCalculations.ts';
+import { RouteMap } from '../components/RouteMap.tsx';
 
 interface PlanPageProps {
   inputs: TripInputs;
@@ -19,6 +26,79 @@ export const PlanPage: React.FC<PlanPageProps> = ({
 }) => {
   // Local tipping group size for the interactive widget
   const [tippingGroupSize, setTippingGroupSize] = useState<number>(inputs.passengers <= 4 ? inputs.passengers : 4);
+  const [isStopsDrawerOpen, setIsStopsDrawerOpen] = useState<boolean>(inputs.intermediateStops.length > 0);
+  const [showRouteMap, setShowRouteMap] = useState<boolean>(true);
+  const [newStopInput, setNewStopInput] = useState<string>('');
+  const [newStopDuration, setNewStopDuration] = useState<number>(30);
+  const [optimizationFeedback, setOptimizationFeedback] = useState<{
+    timeSaved: number;
+    distanceSaved: number;
+    text: string;
+  } | null>(null);
+
+  const normalizedStops = normalizeIntermediateStops(inputs.intermediateStops);
+
+  // Reorder stop dynamically
+  const handleMoveStop = (fromIndex: number, toIndex: number) => {
+    const updated = reorderIntermediateStops(inputs.intermediateStops, fromIndex, toIndex);
+    onUpdateInputs({ intermediateStops: updated, isRouteOptimized: false });
+    setOptimizationFeedback(null);
+  };
+
+  // Add stop
+  const handleAddStop = () => {
+    if (!newStopInput.trim()) return;
+    const newStop: IntermediateStop = {
+      id: `stop-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: newStopInput.trim(),
+      stopDurationMinutes: newStopDuration,
+    };
+    onUpdateInputs({
+      intermediateStops: [...normalizedStops, newStop],
+      isRouteOptimized: false,
+    });
+    setNewStopInput('');
+    setOptimizationFeedback(null);
+  };
+
+  // Remove stop
+  const handleRemoveStop = (index: number) => {
+    const updated = normalizedStops.filter((_, idx) => idx !== index);
+    onUpdateInputs({
+      intermediateStops: updated,
+      isRouteOptimized: false,
+    });
+    setOptimizationFeedback(null);
+  };
+
+  // Optimize route sequence using TSP / shortest transit time
+  const handleOptimizeRouteSequence = () => {
+    if (normalizedStops.length < 2) return;
+    const result = calculateTimeEfficientRouteSequence(
+      inputs.origin,
+      inputs.intermediateStops,
+      inputs.destination
+    );
+
+    onUpdateInputs({
+      intermediateStops: result.optimizedSequence,
+      isRouteOptimized: true,
+    });
+
+    if (result.isReordered && (result.timeSavedMinutes > 0 || result.distanceSavedKm > 0)) {
+      setOptimizationFeedback({
+        timeSaved: result.timeSavedMinutes,
+        distanceSaved: result.distanceSavedKm,
+        text: `Route reordered for maximum efficiency! Saved ${result.distanceSavedKm} km & ${formatDuration(result.timeSavedMinutes)} of travel time.`,
+      });
+    } else {
+      setOptimizationFeedback({
+        timeSaved: 0,
+        distanceSaved: 0,
+        text: `Your current stop sequence is already the most time-efficient route from ${inputs.origin} to ${inputs.destination}!`,
+      });
+    }
+  };
 
   // Swap Origin and Destination
   const handleSwap = () => {
@@ -282,6 +362,202 @@ export const PlanPage: React.FC<PlanPageProps> = ({
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Intermediate Stops (Waypoints) Management Console */}
+            <div className="mt-space-sm pt-space-sm border-t border-surface-container">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsStopsDrawerOpen(!isStopsDrawerOpen)}
+                    className="inline-flex items-center gap-1.5 text-primary hover:text-primary-container font-title-sm text-title-sm transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base">
+                      {isStopsDrawerOpen ? 'remove_circle_outline' : 'add_location_alt'}
+                    </span>
+                    <span>
+                      {normalizedStops.length > 0
+                        ? `Intermediate Stops & Waypoints (${normalizedStops.length})`
+                        : '+ Add Intermediate Stops / Waypoints'}
+                    </span>
+                    <span
+                      className="material-symbols-outlined text-sm transition-transform duration-200"
+                      style={{ transform: isStopsDrawerOpen ? 'rotate(180deg)' : 'none' }}
+                    >
+                      expand_more
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowRouteMap(!showRouteMap)}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                      showRouteMap
+                        ? 'bg-primary/10 border-primary text-primary font-bold'
+                        : 'bg-surface-container-low border-surface-container text-secondary hover:text-on-surface'
+                    }`}
+                    title="Toggle Live Route & Waypoints Map"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">map</span>
+                    <span>{showRouteMap ? 'Hide Route Map' : 'Show Route Map'}</span>
+                  </button>
+                </div>
+
+                {normalizedStops.length >= 2 && (
+                  <button
+                    type="button"
+                    onClick={handleOptimizeRouteSequence}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed hover:bg-tertiary-fixed-dim font-label-md text-label-md font-bold transition-all shadow-xs active:scale-95"
+                    title="Automatically reorder stops to calculate the shortest transit time from origin to destination"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">bolt</span>
+                    <span>⚡ Optimize Route Sequence</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Live Interactive Route Map */}
+              {showRouteMap && (
+                <div className="mt-3">
+                  <RouteMap
+                    inputs={inputs}
+                    height="280px"
+                    className="shadow-sm border border-surface-container"
+                  />
+                </div>
+              )}
+
+              {/* Optimization Feedback Badge */}
+              {optimizationFeedback && (
+                <div className="mt-2 p-2.5 rounded-xl bg-tertiary-container/30 border border-tertiary/30 text-on-surface flex items-start gap-2">
+                  <span className="material-symbols-outlined text-tertiary text-lg shrink-0 mt-0.5">verified</span>
+                  <div className="text-body-sm text-body-sm font-medium flex-1">
+                    {optimizationFeedback.text}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setOptimizationFeedback(null)}
+                    className="text-secondary hover:text-on-surface text-sm ml-1"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+
+              {/* Waypoints Drawer */}
+              {isStopsDrawerOpen && (
+                <div className="mt-3 p-3 rounded-xl bg-surface-container-low/80 border border-surface-container space-y-3">
+                  {/* Stops List */}
+                  {normalizedStops.length > 0 ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-label-sm font-label-sm text-secondary">
+                        <span>Route Waypoints Sequence ({inputs.origin} ➔ {inputs.destination})</span>
+                        <span className="text-xs">Use ↑ ↓ buttons to dynamically reorder</span>
+                      </div>
+                      {normalizedStops.map((stop, index) => (
+                        <div
+                          key={stop.id || index}
+                          className="flex items-center justify-between gap-2 p-2 rounded-lg bg-surface-container-lowest border border-surface-container shadow-2xs hover:border-primary/40 transition-all"
+                        >
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span className="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed text-xs font-bold flex items-center justify-center shrink-0">
+                              {index + 1}
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <span className="font-title-sm text-title-sm text-on-surface truncate block font-medium">
+                                {stop.name}
+                              </span>
+                              <span className="text-[11px] text-secondary">
+                                {stop.stopDurationMinutes || 30} min pitstop allowance
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Reordering Controls */}
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => handleMoveStop(index, index - 1)}
+                              disabled={index === 0}
+                              aria-label={`Move ${stop.name} earlier in route`}
+                              className="w-7 h-7 rounded bg-surface-container hover:bg-surface-variant disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-on-surface text-sm transition-colors"
+                              title="Move stop earlier"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveStop(index, index + 1)}
+                              disabled={index === normalizedStops.length - 1}
+                              aria-label={`Move ${stop.name} later in route`}
+                              className="w-7 h-7 rounded bg-surface-container hover:bg-surface-variant disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-on-surface text-sm transition-colors"
+                              title="Move stop later"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveStop(index)}
+                              aria-label={`Remove ${stop.name}`}
+                              className="w-7 h-7 rounded bg-surface-container hover:bg-error-container hover:text-error flex items-center justify-center text-secondary text-sm transition-colors ml-1"
+                              title="Remove stop"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">close</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-body-sm text-secondary text-sm">
+                      No intermediate stops added yet. Add pitstops, scenic waypoints, or meal junctions along your corridor.
+                    </p>
+                  )}
+
+                  {/* Add New Stop Input Bar */}
+                  <div className="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-surface-container">
+                    <div className="relative flex-1 w-full">
+                      <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary text-base">
+                        add_location
+                      </span>
+                      <input
+                        type="text"
+                        value={newStopInput}
+                        onChange={e => setNewStopInput(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddStop();
+                          }
+                        }}
+                        placeholder="Add stop (e.g. Satara, Kolhapur, Belgaum)"
+                        className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-surface-container-lowest border border-surface-container text-body-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <select
+                        value={newStopDuration}
+                        onChange={e => setNewStopDuration(Number(e.target.value))}
+                        className="py-1.5 px-2 rounded-lg bg-surface-container-lowest border border-surface-container text-body-sm text-on-surface text-xs focus:outline-none"
+                      >
+                        <option value={15}>15m quick tea</option>
+                        <option value={30}>30m meal stop</option>
+                        <option value={45}>45m refuel & food</option>
+                        <option value={60}>60m long break</option>
+                      </select>
+                      <button
+                        type="button"
+                        onClick={handleAddStop}
+                        disabled={!newStopInput.trim()}
+                        className="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-title-sm text-xs hover:bg-primary-container disabled:opacity-40 disabled:cursor-not-allowed transition-all shrink-0"
+                      >
+                        + Add Waypoint
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Footer / CTA Drawer inside Hero Card */}
@@ -586,9 +862,13 @@ export const PlanPage: React.FC<PlanPageProps> = ({
                 {/* Commercial Flight Airplane Window Image */}
                 <div className="relative w-full h-28 rounded-xl overflow-hidden shadow-inner mb-space-sm group-hover:scale-[1.01] transition-transform">
                   <img
-                    src="/assets/aistudio/screen_07a1f57e.png"
-                    alt="Commercial flight passenger window looking out at sunset clouds"
-                    className="w-full h-full object-cover"
+                    src="/assets/aistudio/screen_29c8d11a.png"
+                    alt="Commercial flight cruising above sunset clouds over wing"
+                    className="w-full h-full object-cover object-center"
+                    onError={e => {
+                      e.currentTarget.src =
+                        'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/85 via-transparent to-transparent flex items-end justify-between p-2">
                     <span className="font-label-sm text-label-sm text-surface-bright flex items-center gap-1 font-semibold">
